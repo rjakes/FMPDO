@@ -5,7 +5,7 @@ require_once('config.php');
 if (!defined('PDO::ATTR_DRIVER_NAME')) {
     die ('<span style="color: red">PDO unavailable</span>');
 }else{
-    echo '<span style="color: blue">PDO Drivers:</span><br>';
+    echo '<span style="color: blue">Installed PDO Drivers:</span><br>';
     var_dump(PDO::getAvailableDrivers());
 }
 echo '<br><br>';
@@ -21,6 +21,17 @@ $property = "locale";
 
 echo '<span style="color: blue">Test FMPDO->getProperty() (where property = '.$property.'):</span><br>';
 var_dump($fmpdo->getProperty($property));
+echo '<br><br>';
+
+echo '<span style="color: blue">Test FMPDO->isError() (where we expect an error object):</span><br>';
+$error = new FMPDO_Error("test error class");
+$test_result = FMPDO::isError($error) ? "Test passed" : "Test failed";
+var_dump($test_result);
+
+echo '<span style="color: blue">Test FMPDO->isError() (where we don\'t expect an error object):</span><br>';
+$record = new FMPDO_Record();
+$test_result = FMPDO::isError($record) ? "Test passed" : "Test failed";
+var_dump($test_result);
 echo '<br><br>';
 
 echo '<span style="color: blue">Test FMPDO->newFindCommand() (for category table):</span><br>';

@@ -15,9 +15,9 @@ class FMPDO_Error extends PEAR_Error
     var $_fmpdo;
 
 
-    function FMPDO_Error(&$fmpdo, $message = null, $code = null)
+    function FMPDO_Error($message = null, $code = null)
     {
-        $this->_fmpdo =& $fmpdo;
+        //$this->_fmpdo =& $fmpdo;
         parent::PEAR_Error($message, $code);
 
 //TODO create logging functions

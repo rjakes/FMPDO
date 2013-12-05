@@ -32,6 +32,12 @@ class FMPDO {
         }
     }
 
+    function isError($variable)
+    {
+        return is_a($variable, 'FMPDO_Error');
+    }
+
+
     function getProperty($property) {
         return isset($this->$property) ? $this->$property : null;
     }
