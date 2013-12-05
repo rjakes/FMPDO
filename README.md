@@ -73,6 +73,7 @@ $find = $fmpdo->newFindCommand($sqlTable) // a new FMPDO_Command_Find object
 
 # TODOs
 * The method used to instantiate objects from with their parent is crude. Need a more elegant way of doing this, perhaps with late binding.
+* Need code review for SQL injection weaknesses
 * Need to implement a more elegant method for unit testing
 * Create roadmap for method implementation
 
