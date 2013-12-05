@@ -45,25 +45,26 @@ FMPDO is free for commercial and non-commercial use, licensed under the business
 * If you intend to use FileMaker External SQL Sources, ensure that the SQL columns are in the same position as the FileMaker fields
 * Add or change the database initialization call
 
-```
 
+```
 $fm = new FileMaker(); // this is the FileMaker.php object
 
 $fmpdo = new FMPDO($sql_connect_parameters); // this is your SQL database connection
 
 // if you are changing all table to SQL at once, you can do this:
 $fm = new FMPDO($sql_connect_parameters);
-
 ```
 
-* Locate commands that you wish to convert to SQL:
+Locate commands that you wish to convert to SQL:
+
+
 ```
 $find = $fm->newFindCommand($fmpLayout); // new find command for FileMaker
 $find = $fmpdo->newFindCommand($sqlTable) // a new FMPDO_Command_Find object
 
 // subsequent method calls to $find, such as $find->setField() and execute() do not require modification
-
 ```
+
 
 ## Tricky Stuff
 * Server side scripts not supported
