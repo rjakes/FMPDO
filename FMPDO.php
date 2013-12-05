@@ -56,6 +56,14 @@ class FMPDO {
             $this->error = 'Class instantiated without sql config array';
         }
     }
+
+
+    function getAPIVersion(){
+
+        return "0.0.0";
+    }
+
+
     /**
      * Test for whether or not a variable is an FMPDO_Error object.
      *

@@ -12,12 +12,17 @@ echo '<br><br>';
 
 include(__DIR__ . '/FMPDO.php');
 
-
-$fmpdo = new FMPDO($sql_config);
-
-
 $id = '3';
 $property = "locale";
+
+$fmpdo = new FMPDO($sql_config);
+echo '<span style="color: blue">Test FMPDO->__contruct():</span><br>';
+var_dump($fmpdo);
+echo '<br><br>';
+
+echo '<span style="color: blue">Test FMPDO->getAPIVersion():</span><br>';
+var_dump($fmpdo->getAPIVersion());
+echo '<br><br>';
 
 echo '<span style="color: blue">Test FMPDO->getProperty() (where property = '.$property.'):</span><br>';
 var_dump($fmpdo->getProperty($property));
