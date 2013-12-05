@@ -4,7 +4,7 @@
  *
  * @package FMPDO
     *
- * Copyright � 2013, ROger Jacques Consulting
+ * Copyright � 2013, Roger Jacques Consulting
  * See enclosed MIT license
 
  */

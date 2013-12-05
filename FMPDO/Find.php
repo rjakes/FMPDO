@@ -1,5 +1,12 @@
 <?php
+/* FMPDO Library.
+ *
+ * @package FMPDO
+    *
+ * Copyright � 2013, Roger Jacques Consulting
+ * See enclosed MIT license
 
+ */
 
 require_once(__DIR__ . '/Error.php');
 

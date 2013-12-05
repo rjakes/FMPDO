@@ -1,5 +1,10 @@
 <?php
-/**
+/* FMPDO Library.
+ *
+ * @package FMPDO
+    *
+ * Copyright � 2013, Roger Jacques Consulting
+ * See enclosed MIT license
 
  */
 
