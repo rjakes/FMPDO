@@ -60,7 +60,7 @@ Locate commands that you wish to convert to SQL:
 
 ```
 $find = $fm->newFindCommand($fmpLayout); // new find command for FileMaker
-$find = $fmpdo->newFindCommand($sqlTable) // a new FMPDO_Command_Find object
+$find = $fmpdo->newFindCommand($sqlTable) // a new FmpdoCommandFind object
 
 // subsequent method calls to $find, such as $find->setField() and execute() do not require modification
 ```
