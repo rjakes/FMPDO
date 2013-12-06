@@ -8,26 +8,16 @@
  * See enclosed MIT license
  */
 
-require_once(__DIR__ . '/Error.php');
 
-
-class FMPDO_Command_Edit extends FMPDO
+class FMPDO_Command_Edit
 {
-    var $_fmpdo;
+
     var $_table;
     var $_id;
     var $_fields = array();
 
 
-    public function FMPDO_Command_Edit($table, $id, $sql_config){
-
-        if (!empty($sql_config))
-            parent::__construct($sql_config);
-
-        if(!isset($table) or !isset($id)){
-
-            return new FMPDO_Error("Missing parameter to FMPDO_Command_Edit", "-1");
-        }
+    public function FMPDO_Command_Edit($table, $id){
 
         $this->_table = $table;
         $this->_id = $id;
@@ -39,7 +29,6 @@ class FMPDO_Command_Edit extends FMPDO
         }
 
         $this->_fields[$field][0] = $value;
-
     }
 
     public function setFields($field_array){
@@ -65,13 +54,15 @@ class FMPDO_Command_Edit extends FMPDO
         $field_array = $this->_fields;
 
         $set_string = "";
-        foreach($field_array as $k=>$v){
+        foreach($field_array as $k=>$v){    //TODO change into implode()
             $set_string .= $k."='".$v[0] ."',";
         }
         $set_string = substr($set_string, 0, -1);
 
         $sql = 'UPDATE '.$table.' SET ' . $set_string. ' WHERE id=\''. $id . "'";
-        $query = $this->db->prepare($sql);
+
+        $db = DB::getConnection();
+        $query = $db->prepare($sql);
 
         foreach($field_array as $k=>$v){
             $query->bindParam(':'.$k, $v[0], PDO::PARAM_STR);

@@ -10,11 +10,9 @@
 
 require_once(__DIR__ . '/Error.php');
 
-class FMPDO_Command_Find extends FMPDO {
+class FMPDO_Command_Find {
 
     var $_table;
-    var $_fmpdo;
-    var $_sql;
     var $_fields = array();
     var $_findCriteria = array();
     var $_sortRules = array();
@@ -23,12 +21,8 @@ class FMPDO_Command_Find extends FMPDO {
      * Find command constructor.
      * Assign variable and check parameter 
      */
-    public function FMPDO_Command_Find($sql_config, $table) {
-        if (!empty($sql_config))
-            parent::__construct($sql_config);
-        if (!isset($table)) {
-            return new FMPDO_Error("Missing parameter to FMPDO_Command_Find", "-1");
-        }
+    public function FMPDO_Command_Find($table) {
+
         $this->_table = $table;
     }
 
@@ -41,7 +35,6 @@ class FMPDO_Command_Find extends FMPDO {
 
     function addFindCriterion($field, $value) {
         $this->_findCriteria[$field]['value'] = $value;
-        // TODO - add support for operator in third parameter:  $this->_findCriteria[$field]['operator'] = $operator;
     }
 
     function addSortRule($field, $precedence, $direction='ascend') {
@@ -51,45 +44,10 @@ class FMPDO_Command_Find extends FMPDO {
     }
 
 
-    public function setCriterion($cmdObj, $column, $value) {
-
-        if (!isset($column) or !isset($value)) {
-            return new FMPDO_Error("Missing parameter to addFindCriterion", "-1");
-        }
-        $sqlWhere = $this->sqlWhere($column, $value);
-        $sql = sprintf('%s %s', $cmdObj->queryString, $sqlWhere);
-        $query = $this->db->prepare($sql);
-        try {
-            if (!$query) {
-                return new FMPDO_Error($this->db->errorInfo());
-            }
-        } catch (Exception $e) {
-            return new FMPDO_Error($e);
-        }
-        return $query;
-    }
-
-
     /**
 
      */
-    public function setSortRule($cmdObj, $column, $precedence, $order = null) {
 
-        if (!isset($column)) {
-            return new FMPDO_Error("Missing parameter to addSortRule", "-1");
-        }
-        $sqlSortRule = $this->sqlSort($column, $precedence, $order);
-        $sql = sprintf('%s %s', $cmdObj->queryString, $sqlSortRule);
-        $query = $this->db->prepare($sql);
-        try {
-            if (!$query) {
-                return new FMPDO_Error($this->db->errorInfo());
-            }
-        } catch (Exception $e) {
-            return new FMPDO_Error($e);
-        }
-        return $query;
-    }
 
     //TODO move sql functions out where they can be used by other classes
 
@@ -139,11 +97,11 @@ class FMPDO_Command_Find extends FMPDO {
         asort($this->_sortRules); // sort our order by statements by the precedence
         $order_string = self::sqlOrderBy($this->_sortRules);
 
-
-        $query = $this->db->prepare($select_string . ' FROM ' . $table . " " . $where_string ." ". $order_string);
+        $db = DB::getConnection();
+        $query = $db->prepare($select_string . ' FROM ' . $table . " " . $where_string ." ". $order_string);
         try {
             if (!$query) {
-                return new FMPDO_Error($this->db->errorInfo());
+                return new FMPDO_Error($db->errorInfo());
             }
             $result =  $query->execute();
         } catch (Exception $e) {

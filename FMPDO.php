@@ -13,7 +13,7 @@
 /**
  * Bring in all child and related classes
  */
-require_once(__DIR__ . '/FMPDO/dbclass.php');
+require_once(__DIR__ . '/FMPDO/DB.php');
 require_once(__DIR__ . '/FMPDO/Record.php');
 require_once(__DIR__ . '/FMPDO/Result.php');
 require_once(__DIR__ . '/FMPDO/Edit.php');
@@ -29,8 +29,7 @@ require_once(__DIR__ . '/FMPDO/Find.php');
  */
 class FMPDO {
 
-    var $fmpdo;
-    var $findCmd;
+    public static $sql_config = array();
     var $result = false;
     var $error = '';
     var $locale = 'en';  //TODO move config setting out to their own file
@@ -42,22 +41,13 @@ class FMPDO {
      */
     function __construct($sql_config = array()) {
 
-        // build the db connection from the included db class file
-
-        if (!empty($sql_config)) {
-            try {
-                $this->db = new dbclass($sql_config);
-            } catch (Exception $e) {
-                $this->$error = 'Could not connect with database!' . $e;
-            }
-
-            $this->sql_config = $sql_config;
-        } else {
-            $this->error = 'Class instantiated without sql config array';
-        }
+        self::$sql_config = $sql_config;
     }
 
 
+    /**
+     * @return string // the FMPDO API version
+     */
     function getAPIVersion(){
 
         return "0.0.0";
@@ -97,10 +87,11 @@ class FMPDO {
      * @return FMPDO_Error|FMPDO_Record
      */
     public function getRecordByID($table, $id) {
-        $query = $this->db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
+        $db = DB::getConnection();
+        $query = $db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
         try {
             if (!$query) {
-                return new FMPDO_Error($this->db->errorInfo());
+                return new FMPDO_Error($db->errorInfo());
             }
             $result =  $query->execute();
         } catch (Exception $e) {
@@ -118,7 +109,7 @@ class FMPDO {
      * @return FMPDO_Command_Find
      */
     function newFindCommand($table) {
-        $findCommand = new FMPDO_Command_Find($this->sql_config, $table);
+        $findCommand = new FMPDO_Command_Find($table);
         return $findCommand;
     }
 
@@ -131,7 +122,7 @@ class FMPDO {
      * @return FMPDO_Command_Edit
      */
     function newEditCommand($table, $id) {
-        $editCmd = new FMPDO_Command_Edit($table, $id, $this->sql_config);
+        $editCmd = new FMPDO_Command_Edit($table, $id);
         return $editCmd;
     }
 
