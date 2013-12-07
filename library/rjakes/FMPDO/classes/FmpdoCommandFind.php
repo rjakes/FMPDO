@@ -12,8 +12,8 @@ require_once(__DIR__ . '/FmpdoError.php');
 
 class FmpdoCommandFind {
 
-    var $_table;
-    var $_fields = array();
+    var $table;
+    var $fields = array();
     var $_findCriteria = array();
     var $_sortRules = array();
 
@@ -21,16 +21,16 @@ class FmpdoCommandFind {
      * Find command constructor.
      * Assign variable and check parameter 
      */
-    public function FmpdoCommandFind($table) {
+    public function __construct($theTable) {
 
-        $this->_table = $table;
+        $this->table = $theTable;
     }
 
     public function selectFields($field_array) {
         if (!isset($field_array)) {
             return new FmpdoError("Missing parameter to FmpdoCommandFind->setFields", "-1");
         }
-        $this->_fields = $field_array;
+        $this->fields = $field_array;
     }
 
     function addFindCriterion($field, $value) {
@@ -91,8 +91,8 @@ class FmpdoCommandFind {
     }
 
     public function execute() {
-        $table = $this->_table;
-        $select_string = self::sqlSelect($this->_fields);
+        $table = $this->table;
+        $select_string = self::sqlSelect($this->fields);
         $where_string = self::sqlWhere($this->_findCriteria);
         asort($this->_sortRules); // sort our order by statements by the precedence
         $order_string = self::sqlOrderBy($this->_sortRules);
@@ -109,7 +109,7 @@ class FmpdoCommandFind {
         } catch (Exception $e) {
             return new FmpdoError($e);
         }
-        return new FmpdoResult($query->fetchAll());
+        return new FmpdoResult($table, $query->fetchAll());
     }
 
 }

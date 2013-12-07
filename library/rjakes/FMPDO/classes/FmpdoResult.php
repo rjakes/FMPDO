@@ -12,9 +12,10 @@ class FmpdoResult
 
 var $_records = array();
 var $_fetchCount;
+var $fields;
 
 
-    function FmpdoResult($rows= FALSE){
+    function __construct($table, $rows= FALSE){
 
         if($rows and empty($rows)){
          return new FMPDO__Error($this, 'No data was found.');
@@ -25,16 +26,17 @@ var $_fetchCount;
         }
 
         if($rows){
-            self::addPDOrows($rows);
+            self::addPDOrows($table, $rows);
         }
+        $this->table = $table;
     }
 
-    private function addPDOrows($rows){
+    private function addPDOrows($table, $rows){
 
         if(isset($rows)){
 
             foreach ($rows as $row){
-                $record = new FmpdoRecord($row);
+                $record = new FmpdoRecord($table, $row);
                 $this->_records[] = $record;
             }
             $this->_fetchCount = count($this->_records);

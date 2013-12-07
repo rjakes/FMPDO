@@ -12,15 +12,15 @@
 class FmpdoCommandEdit
 {
 
-    var $_table;
-    var $_id;
-    var $_fields = array();
+    var $table;
+    var $id;
+    var $fields = array();
 
 
-    public function FmpdoCommandEdit($table, $id){
+    public function __construct($theTable, $id){
 
-        $this->_table = $table;
-        $this->_id = $id;
+        $this->table = $theTable;
+        $this->id = $id;
     }
 
     public function setField($field, $value){
@@ -28,7 +28,7 @@ class FmpdoCommandEdit
             return new FmpdoError("Missing parameter to FmpdoCommandEdit->setField", "-1");
         }
 
-        $this->_fields[$field][0] = $value;
+        $this->fields[$field][0] = $value;
     }
 
     public function setFields($field_array){
@@ -42,16 +42,16 @@ class FmpdoCommandEdit
         foreach($field_array as $field){
             $field_name = $field['field'];
             $field_value = $field['value'];
-            $this->_fields[$field_name][0] = $field_value;
+            $this->fields[$field_name][0] = $field_value;
 
         }
 
     }
 
     public function execute(){
-        $table = $this->_table;
-        $id = $this->_id;
-        $field_array = $this->_fields;
+        $table = $this->fields;
+        $id = $this->id;
+        $field_array = $this->fields;
 
         $set_string = "";
         foreach($field_array as $k=>$v){    //TODO change into implode()

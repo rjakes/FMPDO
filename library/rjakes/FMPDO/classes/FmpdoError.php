@@ -22,7 +22,7 @@ class FmpdoError extends PEAR_Error
     var $_fmpdo;
 
 
-    function FmpdoError($message = null, $code = null)
+    function __construct($message = null, $code = null)
     {
         //$this->_fmpdo =& $fmpdo;
         parent::PEAR_Error($message, $code);

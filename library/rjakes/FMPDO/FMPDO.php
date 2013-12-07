@@ -134,4 +134,9 @@ class FMPDO {
         return $editCmd;
     }
 
+    function createRecord($table) {
+        $record = new FmpdoRecord($table);
+        return $record;
+    }
+
 }

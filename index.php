@@ -36,10 +36,16 @@ $test_result = FMPDO::isError($error) ? "Test passed" : "Test failed";
 var_dump($test_result);
 
 echo '<span style="color: blue">Test FMPDO->isError() (where we don\'t expect an error object):</span><br>';
-$record = new FmpdoRecord();
+$record = new FmpdoRecord('category');
 $test_result = FMPDO::isError($record) ? "Test passed" : "Test failed";
 var_dump($test_result);
 echo '<br><br>';
+
+echo '<span style="color: blue">Test FMPDO->createRecord() (for category table):</span><br>';
+$createdRecord = $fmpdo->createRecord('category');
+var_dump($createdRecord);
+echo '<br><br>';
+
 
 echo '<span style="color: blue">Test FMPDO->newFindCommand() (for category table):</span><br>';
 $findCommand = $fmpdo->newFindCommand('category');
