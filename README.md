@@ -47,12 +47,30 @@ FMPDO is free for commercial and non-commercial use, licensed under the business
 
 
 ```
-$fm = new FileMaker(); // this is the FileMaker.php object
+// this is a prototypical FileMaker.php instantiation
+$databaseName = 'myDB';
+$server = '127.0.0.1';
+$userName = 'uname';
+$passWord = 'pword';
 
-$fmpdo = new FMPDO($sql_connect_parameters); // this is your SQL database connection
+$fm = new FileMaker($databaseName,$server,$userName,$passWord);
+```
+
+```
+// this is a prototypical FMPDO instantiation
+$db_config = array(
+    'driver' => 'mysql',
+    'host' => '127.0.0.1',
+    'port' => '3306',
+    'database' => 'fmpdo',
+    'user' => 'root',
+    'password' => 'root'
+);
+
+$fmpdo = new FMPDO($db_config);
 
 // if you are changing all table to SQL at once, you can do this:
-$fm = new FMPDO($sql_connect_parameters);
+$fm = new FMPDO($db_config);
 ```
 
 Locate commands that you wish to convert to SQL:
