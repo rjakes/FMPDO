@@ -12,10 +12,10 @@ require_once(__DIR__ . '/FmpdoError.php');
 
 class FmpdoCommandFind {
 
-    var $table;
-    var $fields = array();
-    var $_findCriteria = array();
-    var $_sortRules = array();
+    private $table;
+    private $fields = array();
+    private $findCriteria = array();
+    private $sortRules = array();
 
     /**
      * Find command constructor.
@@ -34,13 +34,13 @@ class FmpdoCommandFind {
     }
 
     function addFindCriterion($field, $value) {
-        $this->_findCriteria[$field]['value'] = $value;
+        $this->findCriteria[$field]['value'] = $value;
     }
 
     function addSortRule($field, $precedence, $direction='ascend') {
         $sqlOrder = strtolower($direction) == "descend" ? "DESC" : "ASC";
-        $this->_sortRules[$precedence]['field']= $field;
-        $this->_sortRules[$precedence]['direction']= $sqlOrder;
+        $this->sortRules[$precedence]['field']= $field;
+        $this->sortRules[$precedence]['direction']= $sqlOrder;
     }
 
 
@@ -93,9 +93,9 @@ class FmpdoCommandFind {
     public function execute() {
         $table = $this->table;
         $select_string = self::sqlSelect($this->fields);
-        $where_string = self::sqlWhere($this->_findCriteria);
-        asort($this->_sortRules); // sort our order by statements by the precedence
-        $order_string = self::sqlOrderBy($this->_sortRules);
+        $where_string = self::sqlWhere($this->findCriteria);
+        asort($this->sortRules); // sort our order by statements by the precedence
+        $order_string = self::sqlOrderBy($this->sortRules);
 
         $db = FmpdoDb::getConnection();
 

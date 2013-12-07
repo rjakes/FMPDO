@@ -12,9 +12,9 @@
 class FmpdoCommandEdit
 {
 
-    var $table;
-    var $id;
-    var $fields = array();
+    private $table;
+    private $id;
+    private $fields = array();
 
 
     public function __construct($theTable, $id){
@@ -49,12 +49,12 @@ class FmpdoCommandEdit
     }
 
     public function execute(){
-        $table = $this->fields;
+        $table = $this->table;
         $id = $this->id;
         $field_array = $this->fields;
 
         $set_string = "";
-        foreach($field_array as $k=>$v){    //TODO change into implode()
+        foreach($field_array as $k=>$v){
             $set_string .= $k."='".$v[0] ."',";
         }
         $set_string = substr($set_string, 0, -1);

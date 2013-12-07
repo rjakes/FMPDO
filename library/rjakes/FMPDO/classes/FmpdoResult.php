@@ -10,9 +10,9 @@
 class FmpdoResult
 {
 
-var $_records = array();
-var $_fetchCount;
-var $fields;
+private $records = array();
+private $fetchCount;
+
 
 
     function __construct($table, $rows= FALSE){
@@ -25,9 +25,8 @@ var $fields;
          return new FileMaker_Error($this, 'Rows missing from result.');
         }
 
-        if($rows){
-            self::addPDOrows($table, $rows);
-        }
+
+        self::addPDOrows($table, $rows);
         $this->table = $table;
     }
 
@@ -37,18 +36,18 @@ var $fields;
 
             foreach ($rows as $row){
                 $record = new FmpdoRecord($table, $row);
-                $this->_records[] = $record;
+                $this->records[] = $record;
             }
-            $this->_fetchCount = count($this->_records);
+            $this->fetchCount = count($this->records);
         }
     }
 
     function getRecords(){
-        return $this->_records;
+        return $this->records;
     }
 
     function getFirstRecord(){
-        return $this->_records[0];
+        return $this->records[0];
     }
 
 }

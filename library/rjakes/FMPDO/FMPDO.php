@@ -21,7 +21,7 @@ require_once(__DIR__ . '/classes/FmpdoError.php');
 require_once(__DIR__ . '/classes/FmpdoCommandFind.php');
 
 
-set_include_path(get_include_path().PATH_SEPARATOR.__DIR__.'/ZF2/Db/Sql');
+set_include_path(get_include_path().PATH_SEPARATOR.__DIR__.'/Zend');
 
 function __autoload($class_name) {
     include $class_name . '.php';
@@ -37,19 +37,18 @@ function __autoload($class_name) {
  */
 class FMPDO {
 
-    public static $sql_config = array();
-    var $result = false;
-    var $error = '';
-    var $locale = 'en';  //TODO move config setting out to their own file
+    public static $db_config = array();
+    private $error = '';
+    private $locale = 'en';  //TODO move config setting out to their own file
 
     /**
      * FMPDO Constructor
      * @param array $sql_config  an array of settings for the db connection
      *
      */
-    function __construct($sql_config = array()) {
+    function __construct($db_config = array()) {
 
-        self::$sql_config = $sql_config;
+        self::$db_config = $db_config;
     }
 
 
@@ -106,7 +105,7 @@ class FMPDO {
             return new FmpdoError($e);
         }
         $rows=$query->fetchAll();
-        return new FmpdoRecord($rows[0]);
+        return new FmpdoRecord($table, $rows[0]);
     }
 
 
