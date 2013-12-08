@@ -56,6 +56,12 @@ var_dump($createdRecord);
 echo '<br><br>';
 
 
+echo '<span style="color: blue">Test FMPDO->getRecordByID() (where id = '.$id.'):</span><br>';
+$record = $fmpdo->getRecordByID('category', $id);
+var_dump($record);
+echo '<br><br>';
+
+
 echo '<span style="color: blue">Test FMPDO->newFindCommand() (for category table):</span><br>';
 $findCommand = $fmpdo->newFindCommand('category');
 var_dump($findCommand);
@@ -106,10 +112,6 @@ echo "<pre>" . ($result==TRUE ? "Edit Succeeded" : "Edit Failed") . "</pre>";
 
 echo '<br><br>';
 
-echo '<span style="color: blue">Test FMPDO->getRecordByID() (where id = '.$id.'):</span><br>';
-$record = $fmpdo->getRecordByID('category', $id);
-var_dump($record);
-echo '<br><br>';
 
 
 echo '<span style="color: blue">Test FmpdoRecord->getField() (where field = type):</span><br>';

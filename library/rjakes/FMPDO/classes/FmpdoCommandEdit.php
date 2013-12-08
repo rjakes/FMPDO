@@ -61,7 +61,7 @@ class FmpdoCommandEdit
 
         $sql = 'UPDATE '.$table.' SET ' . $set_string. ' WHERE id=\''. $id . "'";
 
-        $db = FmpdoDb::getConnection();
+        $db = FMPDO::getConnection();
         $query = $db->prepare($sql);
 
         foreach($field_array as $k=>$v){

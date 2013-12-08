@@ -27,8 +27,6 @@ function __autoload($class_name) {
     include $class_name . '.php';
 }
 
-//$sql = new Sql($db);
-
 /**
  * Base FMPDO Class
  *
@@ -37,7 +35,7 @@ function __autoload($class_name) {
  */
 class FMPDO {
 
-    public static $db_config = array();
+    public static $connection;
     private $error = '';
     private $locale = 'en';  //TODO move config setting out to their own file
 
@@ -48,7 +46,7 @@ class FMPDO {
      */
     function __construct($db_config = array()) {
 
-        self::$db_config = $db_config;
+        self::$connection = new FmpdoDb($db_config);
     }
 
 
@@ -85,6 +83,14 @@ class FMPDO {
         return isset($this->$property) ? $this->$property : null;
     }
 
+    /**
+     * @param $property
+     * @return the static connection for this instance of FMPDO
+     */
+    public static function getConnection() {
+        return self::$connection;
+    }
+
 
     /**
      * Fetches a record from the database by its id column
@@ -94,7 +100,7 @@ class FMPDO {
      * @return FmpdoError|FmpdoRecord
      */
     public function getRecordByID($table, $id) {
-        $db = FmpdoDb::getConnection();
+        $db = FMPDO::getConnection();
         $query = $db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
         try {
             if (!$query) {

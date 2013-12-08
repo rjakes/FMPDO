@@ -4,11 +4,9 @@
 
 class FmpdoDb extends PDO {
 
-    public static $connection;  // holds the pdo connection
-
-    function __construct() {
+    function __construct($db_config) {
         try {
-            extract(FMPDO::$db_config);
+            extract($db_config);
             if(!isset($port)){
                 $port= '3306';  //TODO add correct port for passed in driver
             }
@@ -20,15 +18,8 @@ class FmpdoDb extends PDO {
 
         } catch (PDOException $e) {
 
-            return ("Connection failed ".$e->getMessage());
+            die("<pre>DB connection failed <br>". str_replace("#", "<br>#", $e)."</pre>");
         }
-    }
-
-    public static function getConnection(){
-        if(!self::$connection){
-            self::$connection = new self();
-        }
-        return self::$connection;
     }
 
 }
