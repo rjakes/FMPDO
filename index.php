@@ -4,6 +4,7 @@
 
 
 require_once(__DIR__ . '/library/rjakes/FMPDO/FMPDO.php');
+echo str_replace(":", "<br>", get_include_path())."<br><br>";
 
 
 if (!defined('PDO::ATTR_DRIVER_NAME')) {

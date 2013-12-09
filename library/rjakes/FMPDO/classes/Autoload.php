@@ -9,10 +9,6 @@
 
 $result = set_include_path(get_include_path() . PATH_SEPARATOR.$DOCUMENT_ROOT . '/library');
 $result = set_include_path(get_include_path() . PATH_SEPARATOR.$DOCUMENT_ROOT . '/library/rjakes/FMPDO/classes');
-$result = set_include_path(get_include_path() . PATH_SEPARATOR.$DOCUMENT_ROOT . '/library/Zend');
-$result = set_include_path(get_include_path() . PATH_SEPARATOR.$DOCUMENT_ROOT . '/library/pear');
-
-echo str_replace(":", "<br>", get_include_path())."<br>";
 
 spl_autoload_extensions(".php");
 

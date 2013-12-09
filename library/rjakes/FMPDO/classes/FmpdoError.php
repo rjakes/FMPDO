@@ -12,7 +12,6 @@
 @require_once 'PEAR.php';
 if (!class_exists('PEAR_Error')) {
     require_once 'library/pear/PEAR.php';
-
 }
 
 
