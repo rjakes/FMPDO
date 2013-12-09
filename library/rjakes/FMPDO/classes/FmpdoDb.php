@@ -18,7 +18,8 @@ class FmpdoDb extends PDO {
 
         } catch (PDOException $e) {
 
-            die("<pre>DB connection failed <br>". str_replace("#", "<br>#", $e)."</pre>");
+            throw $e;
+
         }
     }
 

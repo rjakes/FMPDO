@@ -24,7 +24,20 @@ $db_config = array(
     'password' => 'root'
 );
 
-$fmpdo = new FMPDO($db_config);
+
+try
+{
+    $fmpdo = new FMPDO($db_config);
+}
+catch (Exception $e)
+{
+    print_r('<pre style="color:red;">Failed to connect to database:<br></pre>');
+    print("<pre>Here are the settings that you are trying to use:<br></pre>");
+    var_dump($db_config);
+    print("<pre>Here is the exception from PDO:<br></pre>");
+    echo "<pre>".$e."</pre>";
+    exit;
+}
 
 
 echo '<span style="color: blue">Test FMPDO->__contruct():</span><br>';

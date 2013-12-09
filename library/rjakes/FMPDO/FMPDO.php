@@ -46,7 +46,15 @@ class FMPDO {
      */
     function __construct($db_config = array()) {
 
+        try
+        {
         self::$connection = new FmpdoDb($db_config);
+        }
+        catch (Exception $e)
+        {
+         throw $e;
+
+        }
     }
 
 
