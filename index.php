@@ -1,11 +1,6 @@
 <?php
 
-
-
-
 require_once(__DIR__ . '/Bootstrap.php');
-echo str_replace(":", "<br>", get_include_path())."<br><br>";
-
 
 if (!defined('PDO::ATTR_DRIVER_NAME')) {
     die ('<span style="color: red">PDO unavailable</span>');
@@ -102,7 +97,7 @@ $result = $findCommand->execute();
 var_dump($result);
 echo '<br><br>';
 
-echo '<span style="color: blue">Test FMPDO_Result->getRecords():</span><br>';
+echo '<span style="color: blue">Test Result->getRecords():</span><br>';
 var_dump($result->getRecords());
 echo '<br><br>';
 

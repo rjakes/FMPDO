@@ -86,7 +86,7 @@ $find = $fmpdo->newFindCommand($sqlTable) // a new FmpdoCommandFind object
 
 ## Tricky Stuff
 * Server side scripts not supported
-* Relate sets from web layouts with portals need to be broken out into multiple calls (but the resulting FMPDO_Result object behaves the same as the FileMaker "relatedSet".
+* Relate sets from web layouts with portals need to be broken out into multiple calls (but the resulting Result object behaves the same as the FileMaker "relatedSet".
 * Repeating fields not supported (yes Virginia, people have used repeating fields in FileMaker Web Publishing)
 
 # Issues

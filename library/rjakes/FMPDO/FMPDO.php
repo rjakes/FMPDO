@@ -16,7 +16,7 @@
  * @package FMPDO
  * handles db connection and spawning of command objects
  */
-class Fmpdo {
+class FMPDO {
 
     public static $connection;
     private $error = '';
@@ -91,7 +91,7 @@ class Fmpdo {
      * @return Error|Record
      */
     public function getRecordByID($table, $id) {
-        $db = Fmpdo::getConnection();
+        $db = FMPDO::getConnection();
         $query = $db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
         try {
             if (!$query) {
@@ -107,7 +107,7 @@ class Fmpdo {
 
 
     /**
-     * Instantiates a new FMPDO_Find object
+     * Instantiates a new Find object
      *
      * @param $table the sql table that the query will be performed on
      * @return FmpdoCommandFind
@@ -119,7 +119,7 @@ class Fmpdo {
 
 
     /**
-     * Instantiates a new FMPDO_Edit object
+     * Instantiates a new Edit object
      *
      * @param $table  the sql table that the edit will be performed in
      * @param $id  // the primary key of the record that will be edited

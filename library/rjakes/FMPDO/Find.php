@@ -97,7 +97,7 @@ class Find {
         asort($this->sortRules); // sort our order by statements by the precedence
         $order_string = self::sqlOrderBy($this->sortRules);
 
-        $db = Fmpdo::getConnection();
+        $db = FMPDO::getConnection();
 
 
         $query = $db->prepare($select_string . ' FROM ' . $table . " " . $where_string ." ". $order_string);
