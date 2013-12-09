@@ -8,24 +8,9 @@
  * See enclosed MIT license
 
  */
+require_once("classes/Autoload.php");
 
 
-/**
- * Bring in all child and related classes
- */
-require_once(__DIR__ . '/classes/FmpdoDb.php');
-require_once(__DIR__ . '/classes/FmpdoRecord.php');
-require_once(__DIR__ . '/classes/FmpdoResult.php');
-require_once(__DIR__ . '/classes/FmpdoCommandEdit.php');
-require_once(__DIR__ . '/classes/FmpdoError.php');
-require_once(__DIR__ . '/classes/FmpdoCommandFind.php');
-
-
-set_include_path(get_include_path().PATH_SEPARATOR.__DIR__.'/Zend');
-
-function __autoload($class_name) {
-    include $class_name . '.php';
-}
 
 /**
  * Base FMPDO Class

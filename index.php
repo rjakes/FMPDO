@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 require_once(__DIR__ . '/library/rjakes/FMPDO/FMPDO.php');
 
 
@@ -39,6 +42,8 @@ catch (Exception $e)
     exit;
 }
 
+use Zend\Db\Sql as Zend;
+$select = new Zend\Select('category');
 
 echo '<span style="color: blue">Test FMPDO->__contruct():</span><br>';
 var_dump($fmpdo);
