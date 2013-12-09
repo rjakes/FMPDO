@@ -7,7 +7,7 @@
  * See enclosed MIT license
 
  */
-class FmpdoRecord
+class Record
 {
     private $table;
     private $recordid;
@@ -19,7 +19,7 @@ class FmpdoRecord
 
         $this->table = $theTable;
         if(!empty($pdo_row) and !isset($pdo_row['id'])){
-            return new FmpdoError("id column is required for FmpdoRecord Object");
+            return new Error("id column is required for Record Object");
         }
         if(!empty($pdo_row)){
             $this->recordid = $pdo_row['id'];

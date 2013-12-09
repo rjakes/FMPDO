@@ -15,7 +15,7 @@ if (!class_exists('PEAR_Error')) {
 }
 
 
-class FmpdoError extends PEAR_Error
+class Error extends PEAR_Error
 {
 
     function __construct($message = null, $code = null)

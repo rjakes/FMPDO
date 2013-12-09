@@ -8,9 +8,9 @@
 
  */
 
-require_once(__DIR__ . '/FmpdoError.php');
+require_once(__DIR__ . '/Error.php');
 
-class FmpdoCommandFind {
+class Find {
 
     private $table;
     private $fields = array();
@@ -28,7 +28,7 @@ class FmpdoCommandFind {
 
     public function selectFields($field_array) {
         if (!isset($field_array)) {
-            return new FmpdoError("Missing parameter to FmpdoCommandFind->setFields", "-1");
+            return new Error("Missing parameter to Find->setFields", "-1");
         }
         $this->fields = $field_array;
     }
@@ -97,19 +97,19 @@ class FmpdoCommandFind {
         asort($this->sortRules); // sort our order by statements by the precedence
         $order_string = self::sqlOrderBy($this->sortRules);
 
-        $db = FMPDO::getConnection();
+        $db = Fmpdo::getConnection();
 
 
         $query = $db->prepare($select_string . ' FROM ' . $table . " " . $where_string ." ". $order_string);
         try {
             if (!$query) {
-                return new FmpdoError($db->errorInfo());
+                return new Error($db->errorInfo());
             }
             $result =  $query->execute();
         } catch (Exception $e) {
-            return new FmpdoError($e);
+            return new Error($e);
         }
-        return new FmpdoResult($table, $query->fetchAll());
+        return new Result($table, $query->fetchAll());
     }
 
 }

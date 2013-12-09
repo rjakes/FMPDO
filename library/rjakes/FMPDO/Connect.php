@@ -1,8 +1,9 @@
 <?php
 
 
+use \PDO as PDO;
 
-class FmpdoDb extends PDO {
+class Connect extends PDO {
 
     function __construct($db_config) {
         try {

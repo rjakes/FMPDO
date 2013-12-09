@@ -8,8 +8,6 @@
  * See enclosed MIT license
 
  */
-require_once("classes/Autoload.php");
-
 
 
 /**
@@ -18,7 +16,7 @@ require_once("classes/Autoload.php");
  * @package FMPDO
  * handles db connection and spawning of command objects
  */
-class FMPDO {
+class Fmpdo {
 
     public static $connection;
     private $error = '';
@@ -33,7 +31,7 @@ class FMPDO {
 
         try
         {
-        self::$connection = new FmpdoDb($db_config);
+        self::$connection = new Connect($db_config);
         }
         catch (Exception $e)
         {
@@ -53,7 +51,7 @@ class FMPDO {
 
 
     /**
-     * Test for whether or not a variable is an FmpdoError object.
+     * Test for whether or not a variable is an Error object.
      *
      * @param mixed $variable
      * @return boolean.
@@ -62,7 +60,7 @@ class FMPDO {
      */
     function isError($variable)
     {
-        return is_a($variable, 'FmpdoError');
+        return is_a($variable, 'Error');
     }
 
     /**
@@ -90,21 +88,21 @@ class FMPDO {
      *
      * @param $table the name of the sql table
      * @param $id  the value of the id/primary key
-     * @return FmpdoError|FmpdoRecord
+     * @return Error|Record
      */
     public function getRecordByID($table, $id) {
-        $db = FMPDO::getConnection();
+        $db = Fmpdo::getConnection();
         $query = $db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
         try {
             if (!$query) {
-                return new FmpdoError($db->errorInfo());
+                return new Error($db->errorInfo());
             }
             $result =  $query->execute();
         } catch (Exception $e) {
-            return new FmpdoError($e);
+            return new Error($e);
         }
         $rows=$query->fetchAll();
-        return new FmpdoRecord($table, $rows[0]);
+        return new Record($table, $rows[0]);
     }
 
 
@@ -115,7 +113,7 @@ class FMPDO {
      * @return FmpdoCommandFind
      */
     function newFindCommand($table) {
-        $findCommand = new FmpdoCommandFind($table);
+        $findCommand = new Find($table);
         return $findCommand;
     }
 
@@ -125,15 +123,15 @@ class FMPDO {
      *
      * @param $table  the sql table that the edit will be performed in
      * @param $id  // the primary key of the record that will be edited
-     * @return FmpdoCommandEdit
+     * @return Fmpdo Edit  Object
      */
     function newEditCommand($table, $id) {
-        $editCmd = new FmpdoCommandEdit($table, $id);
+        $editCmd = new Edit($table, $id);
         return $editCmd;
     }
 
     function createRecord($table) {
-        $record = new FmpdoRecord($table);
+        $record = new Record($table);
         return $record;
     }
 

@@ -7,7 +7,7 @@
  * See enclosed MIT license
 
  */
-class FmpdoResult
+class Result
 {
 
 private $records = array();
@@ -18,7 +18,7 @@ private $fetchCount;
     function __construct($table, $rows= FALSE){
 
         if($rows and empty($rows)){
-         return new FMPDO__Error($this, 'No data was found.');
+         return new Error($this, 'No data was found.');
         }
 
         if(!$rows){
@@ -35,7 +35,7 @@ private $fetchCount;
         if(isset($rows)){
 
             foreach ($rows as $row){
-                $record = new FmpdoRecord($table, $row);
+                $record = new Record($table, $row);
                 $this->records[] = $record;
             }
             $this->fetchCount = count($this->records);

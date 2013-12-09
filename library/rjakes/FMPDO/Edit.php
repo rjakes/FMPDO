@@ -9,7 +9,7 @@
  */
 
 
-class FmpdoCommandEdit
+class Edit
 {
 
     private $table;
@@ -25,7 +25,7 @@ class FmpdoCommandEdit
 
     public function setField($field, $value){
         if(!isset($field) or !isset($value)){
-            return new FmpdoError("Missing parameter to FmpdoCommandEdit->setField", "-1");
+            return new Error("Missing parameter to Edit->setField", "-1");
         }
 
         $this->fields[$field][0] = $value;
@@ -33,10 +33,10 @@ class FmpdoCommandEdit
 
     public function setFields($field_array){
         if(!isset($field_array) or !isset($value)){
-            return new FmpdoError("Missing parameter to FmpdoCommandEdit->setFields", "-1");
+            return new Error("Missing parameter to Edit->setFields", "-1");
         }
         if(!is_array($field_array) or !is_array($field_array[0])){
-            return new FmpdoError("FmpdoCommandEdit->setFields parameter must be array of arrays", "-1");
+            return new Error("Edit->setFields parameter must be array of arrays", "-1");
         }
 
         foreach($field_array as $field){
@@ -61,7 +61,7 @@ class FmpdoCommandEdit
 
         $sql = 'UPDATE '.$table.' SET ' . $set_string. ' WHERE id=\''. $id . "'";
 
-        $db = FMPDO::getConnection();
+        $db = Fmpdo::getConnection();
         $query = $db->prepare($sql);
 
         foreach($field_array as $k=>$v){
@@ -70,11 +70,11 @@ class FmpdoCommandEdit
 
         try{
             if (!$query) {
-                return new FmpdoError($this->fmpdo->errorInfo());
+                return new Error($this->fmpdo->errorInfo());
             }
             $result =  $query->execute();
         } catch (Exception $e) {
-            return new FmpdoError($e);
+            return new Error($e);
         }
 
         return $result;
