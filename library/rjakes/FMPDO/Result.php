@@ -18,11 +18,11 @@ private $fetchCount;
     function __construct($table, $rows= FALSE){
 
         if($rows and empty($rows)){
-         return new Error($this, 'No data was found.');
+         return new Error('No data was found.', '401');
         }
 
         if(!$rows){
-         return new FileMaker_Error($this, 'Rows missing from result.');
+         return new Error('Rows missing from result.', '401');
         }
 
 
