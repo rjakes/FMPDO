@@ -129,7 +129,7 @@ $record = $fmpdo->createRecord('category');
 $record->setField("type", "town");
 $record->setField("name", "Wolcott");
 $record->commit();
-echo '<br><br>';
+echo '<pre>New recordid = '.$record->getRecordId().'</pre><br><br>';
 
 echo '<span style="color: blue">Test FMPDO->newEditCommand():</span><br>';
 $editCommand = $fmpdo->newEditCommand('category', '1');

@@ -49,22 +49,21 @@ class Edit
     }
 
     public function execute(){
-        $table = $this->table;
-        $id = $this->id;
-        $field_array = $this->fields;
 
         $set_string = "";
-        foreach($field_array as $k=>$v){
-            $set_string .= $k."='".$v[0] ."',";
+        foreach($this->fields as $k=>$v){
+            $set_string .= $k."=:".$k .",";
         }
         $set_string = substr($set_string, 0, -1);
 
-        $sql = 'UPDATE '.$table.' SET ' . $set_string. ' WHERE id=\''. $id . "'";
+        $sql = 'UPDATE '.$this->table.' SET ' . $set_string. ' WHERE id=:id';
 
         $db = FMPDO::getConnection();
         $query = $db->prepare($sql);
 
-        foreach($field_array as $k=>$v){
+        $query->bindParam(':id', $this->id, PDO::PARAM_STR);
+
+        foreach($this->fields as $k=>$v){
             $query->bindParam(':'.$k, $v[0], PDO::PARAM_STR);
         }
 

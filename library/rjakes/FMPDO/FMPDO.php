@@ -110,9 +110,20 @@ class FMPDO {
      * Instantiates a new Find object
      *
      * @param $table the sql table that the query will be performed on
-     * @return FmpdoCommandFind
+     * @return Find
      */
     function newFindCommand($table) {
+        $findCommand = new Find($table);
+        return $findCommand;
+    }
+
+    /**
+     * Instantiates a new Find object
+     * this method is for backwards compatibility
+     * @param $table the sql table that the query will be performed on
+     * @return Find
+     */
+    function newFindAllCommand($table) {
         $findCommand = new Find($table);
         return $findCommand;
     }

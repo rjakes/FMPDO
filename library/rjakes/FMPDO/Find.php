@@ -26,11 +26,11 @@ class Find {
         $this->table = $theTable;
     }
 
-    public function selectFields($field_array) {
-        if (!isset($field_array)) {
+    public function selectFields($fieldArray) {
+        if (!isset($fieldArray)) {
             return new Error("Missing parameter to Find->setFields", "-1");
         }
-        $this->fields = $field_array;
+        $this->fields = $fieldArray;
     }
 
     function addFindCriterion($field, $value) {
@@ -44,6 +44,8 @@ class Find {
     }
 
 
+
+
     /**
 
      */
@@ -51,56 +53,58 @@ class Find {
 
     //TODO move sql functions out where they can be used by other classes
 
-    private function sqlSelect($field_array){
-        $select_string = "SELECT ";
-        if (empty($field_array)) {
-            $select_string .= '*';
+    private function sqlSelect($fieldArray){
+        $selectString = "SELECT ";
+        if (empty($fieldArray)) {
+            $selectString .= '*';
         }else{
 
-            foreach ($field_array as $k => $v) {
-                $select_string .= $k . ',';
+            foreach ($fieldArray as $k => $v) {
+                $selectString .= $k . ',';
             }
-            $select_string = substr($select_string, 0, -1);
+            $selectString = substr($selectString, 0, -1);
         }
-        return $select_string;
+        return $selectString;
     }
 
 
     private function sqlWhere($where_array) {
-        $where_string = "";
+        $whereString = "";
         if(!empty($where_array)){
             foreach($where_array as $k=>$v){
                 $op = isset($v['operator']) ? $v['operator'] : "=";
-                $where_string .= $k. " " .$op ." '". $v['value'] ."',";
+                $whereString .= $k. " " .$op ." :". $k .",";
             }
-            $where_string = "WHERE ".substr($where_string, 0, -1);
+            $whereString = "WHERE ".substr($whereString, 0, -1);
         }
-        return $where_string;
+        return $whereString;
     }
 
     private function sqlOrderBy($orderby_array) {
 
-        $order_string = "";
+        $orderString = "";
         if(!empty($orderby_array)){
             foreach($orderby_array as $order_by){
-                $order_string .= " '". $order_by['field']. "' " . $order_by['direction'] .",";
+                $orderString .= " '". $order_by['field']. "' " . $order_by['direction'] .",";
             }
-            $order_string = "ORDER BY".substr($order_string, 0, -1);
+            $orderString = "ORDER BY".substr($orderString, 0, -1);
         }
-        return $order_string;
+        return $orderString;
     }
 
     public function execute() {
-        $table = $this->table;
-        $select_string = self::sqlSelect($this->fields);
-        $where_string = self::sqlWhere($this->findCriteria);
-        asort($this->sortRules); // sort our order by statements by the precedence
-        $order_string = self::sqlOrderBy($this->sortRules);
-
         $db = FMPDO::getConnection();
+        $selectString = self::sqlSelect($this->fields);
+        $whereString = self::sqlWhere($this->findCriteria);
+        asort($this->sortRules); // sort our order by statements by the precedence
+        $orderString = self::sqlOrderBy($this->sortRules);
 
+        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString);
 
-        $query = $db->prepare($select_string . ' FROM ' . $table . " " . $where_string ." ". $order_string);
+        foreach($this->findCriteria as $k=>$v){
+            $query->bindParam(':'.$k, $v['value'], PDO::PARAM_STR);
+        }
+
         try {
             if (!$query) {
                 return new Error($db->errorInfo());
@@ -109,7 +113,7 @@ class Find {
         } catch (Exception $e) {
             return new Error($e);
         }
-        return new Result($table, $query->fetchAll());
+        return new Result($this->table, $query->fetchAll());
     }
 
 }
