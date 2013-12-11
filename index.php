@@ -38,8 +38,22 @@ catch (Exception $e)
     exit;
 }
 
-use Zend\Db\Sql as Zend;
-$select = new Zend\Select('category');
+use Zend\Db\Sql;
+use Zend\Db\Adapter;
+
+use Zend\Db;
+
+
+$db = new Zend\Db\Adapter\Adapter(
+    array(
+        'driver'        => 'Pdo',
+        'dsn'            => 'mysql:host=127.0.0.1;',
+        'database'      =>  'fmpdo',
+        'username'       => 'root',
+        'password'       => 'root',
+    )
+);
+
 
 echo '<span style="color: blue">Test FMPDO->__contruct():</span><br>';
 var_dump($fmpdo);
@@ -104,7 +118,18 @@ echo '<br><br>';
 echo '<span style="color: blue">Test Result->getFirstRecord():</span><br>';
 var_dump($result->getFirstRecord());
 
+echo '<span style="color: blue">Test Record->commit() (existing record):</span><br>';
+$record = $result->getFirstRecord();
+$record->setField("type", "town");
+$record->commit();
+echo '<br><br>';
 
+echo '<span style="color: blue">Test Record->commit() (new record):</span><br>';
+$record = $fmpdo->createRecord('category');
+$record->setField("type", "town");
+$record->setField("name", "Wolcott");
+$record->commit();
+echo '<br><br>';
 
 echo '<span style="color: blue">Test FMPDO->newEditCommand():</span><br>';
 $editCommand = $fmpdo->newEditCommand('category', '1');
