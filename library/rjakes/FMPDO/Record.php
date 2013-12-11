@@ -93,6 +93,8 @@ class Record
             $columnString = implode(',', array_keys($column_nv));
             $valueString = implode(',', array_fill(0, count($column_nv), '?'));
             $query = $db->prepare("INSERT INTO ".$table." ({$columnString}) VALUES ({$valueString})");
+            $query->execute(array_values($column_nv));
+            $this->recordid = $db->lastInsertId('id');
         }else{
           // this is an existing record, need to update
             $setString = "";
@@ -103,9 +105,10 @@ class Record
             $setString = substr($setString, 0, -1);
 
             $query = $db->prepare("UPDATE ".$table."  SET {$setString} WHERE id=".$id);
+            $query->execute(array_values($column_nv));
 
         }
-        $query->execute(array_values($column_nv));
+
 
 
 
