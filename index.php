@@ -105,6 +105,11 @@ $findCommand = $fmpdo->newFindAllCommand('category');
 var_dump($findCommand);
 echo '<br><br>';
 
+echo '<span style="color: blue">Test Find(All)->setSelectFields() (showing id and name only):</span><br>';
+$findCommand->setSelectFields(array("id", "name"));
+var_dump($findCommand);
+echo '<br><br>';
+
 echo '<span style="color: blue">Test Find(All)->execute() (for category table):</span><br>';
 $result = $findCommand->execute();
 var_dump($findCommand);
