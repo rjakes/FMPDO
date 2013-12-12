@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.1.66)
 # Database: fmpdo
-# Generation Time: 2013-12-04 16:53:18 -0800
+# Generation Time: 2013-12-11 22:19:26 -0800
 # ************************************************************
 
 
@@ -30,22 +30,40 @@ CREATE TABLE `category` (
   `name` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `date_created` date DEFAULT NULL,
+  `timestamp_modified` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `time_created` time DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
 
-INSERT INTO `category` (`id`, `name`, `type`, `date_created`)
+INSERT INTO `category` (`id`, `name`, `type`, `date_created`, `timestamp_modified`, `time_created`)
 VALUES
-	(1,'Belmont','foobar','2013-12-02'),
-	(2,'Palo Alto','city','2013-12-02'),
-	(3,'California','state','2013-12-02'),
-	(4,'Mexico','country','2013-12-02'),
-	(5,'San Mateo','city','2013-12-02');
+	(1,'Belmont','city','2013-02-01','2013-12-11 22:06:19','08:09:00'),
+	(2,'Palo Alto','town','2013-12-03','2013-12-11 21:47:10','08:10:01'),
+	(3,'California','state','2013-12-04','2013-12-11 21:47:26','08:15:13'),
+	(4,'Mexico','country','2013-12-05','2013-12-11 21:47:42','08:16:23'),
+	(5,'San Mateo','city','2013-12-06','2013-12-11 21:47:48','00:00:00'),
+	(6,'Austin','city','2013-12-17','2013-12-11 21:47:58','08:22:23'),
+	(41,NULL,NULL,'2013-12-18','2013-12-11 21:48:02','08:23:23'),
+	(37,NULL,'town','2013-12-18','2013-12-11 21:48:31','09:16:23'),
+	(42,'Bristol','city','2013-12-11','2013-12-11 21:49:07','09:33:23'),
+	(43,'Brazil','country','2013-12-11','2013-12-11 19:09:29','18:01:10'),
+	(44,'Germany','country','2013-12-11',NULL,'19:08:25'),
+	(57,'Wolcott','town','2013-12-11',NULL,'22:06:19');
 
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `on_create` BEFORE INSERT ON `category` FOR EACH ROW BEGIN
+SET NEW.time_created = NOW();
+SET NEW.date_created = CURDATE();
+END */;;
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;
 
 
 # Dump of table contact
