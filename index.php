@@ -105,6 +105,11 @@ $findCommand = $fmpdo->newFindAllCommand('category');
 var_dump($findCommand);
 echo '<br><br>';
 
+echo '<span style="color: blue">Test Find(All)->setSelectFields() (showing id and name only):</span><br>';
+$findCommand->setSelectFields(array("id", "name"));
+var_dump($findCommand);
+echo '<br><br>';
+
 echo '<span style="color: blue">Test Find(All)->execute() (for category table):</span><br>';
 $result = $findCommand->execute();
 var_dump($findCommand);
@@ -121,6 +126,45 @@ echo '<span style="color: blue">Test Record->commit() (existing record):</span><
 $record = $result->getFirstRecord();
 $record->setField("type", "town");
 $record->commit();
+echo '<br><br>';
+
+echo '<span style="color: blue">Test Record->getFieldAsTimeStamp() (w valid SQL timestamp):</span><br>';
+$findCommand = $fmpdo->newFindCommand('category');
+$findCommand->addFindCriterion("type", "country");
+$result = $findCommand->execute();
+$record = $result->getFirstRecord();
+$timestamp = $record->getFieldAsTimeStamp('timestamp_modified');
+var_dump($timestamp);
+echo '<pre>'.date('c', $timestamp).'</pre>';
+echo '<br><br>';
+
+echo '<span style="color: blue">Test Record->getFieldAsTimeStamp() (w valid SQL date):</span><br>';
+$findCommand = $fmpdo->newFindCommand('category');
+$findCommand->addFindCriterion("type", "country");
+$result = $findCommand->execute();
+$record = $result->getFirstRecord();
+$timestamp = $record->getFieldAsTimeStamp('date_created');
+var_dump($timestamp);
+echo '<pre>'.date('c', $timestamp).'</pre>';
+echo '<br><br>';
+
+echo '<span style="color: blue">Test Record->getFieldAsTimeStamp() (w valid SQL time):</span><br>';
+$findCommand = $fmpdo->newFindCommand('category');
+$findCommand->addFindCriterion("type", "country");
+$result = $findCommand->execute();
+$record = $result->getFirstRecord();
+$timestamp = $record->getFieldAsTimeStamp('time_created');
+var_dump($timestamp);
+echo '<pre>'.date('c', $timestamp).'</pre>';
+echo '<br><br>';
+
+echo '<span style="color: blue">Test Record->getFieldAsTimeStamp() (w invalid column):</span><br>';
+$findCommand = $fmpdo->newFindCommand('category');
+$findCommand->addFindCriterion("type", "country");
+$result = $findCommand->execute();
+$record = $result->getFirstRecord();
+$timestamp = $record->getFieldAsTimeStamp('name');
+var_dump($timestamp);
 echo '<br><br>';
 
 echo '<span style="color: blue">Test Record->commit() (new record):</span><br>';

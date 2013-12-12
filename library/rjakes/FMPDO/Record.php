@@ -7,6 +7,10 @@
  * See enclosed MIT license
 
  */
+
+/**
+ * Record class, a container for a new record or a database row that has been retrieved
+ */
 class Record
 {
     private $table;
@@ -14,6 +18,12 @@ class Record
     private $fields = array();
     private $relatedSets = array();
 
+    /**
+     * A recordid of null indicates a new record that will be inserted upon commit
+     * A non null ID indicates an existing record that will be updated upon commit
+     * @param $theTable
+     * @param array $pdoRow
+     */
     function __construct($theTable, $pdoRow= array())
     {
 
@@ -27,51 +37,124 @@ class Record
         }else{
             $this->recordid = NULL;
         }
-    // a recordid of null indicates a new record that must be inserted upon commit
-    // a non null ID indicates an existing record that must be updated upon commit
+
 
     }
 
+    /** Sets all field values from passed row
+     * row must be an associative array fetch from PDO
+     * @param $pdo_row
+     */
     function setFieldsFromPDOrow($pdo_row)
     {
         if(isset($pdo_row) and is_array($pdo_row))
         {
-
             foreach($pdo_row as $k => $v){
              $this->fields[$k] = Array($v);
             }
         }
     }
 
+    /** Fetches the specified field value from the object
+     * @param $field
+     * @param int $repetition
+     * @return value|Error
+     */
     function getField($field, $repetition= 0)
     {
         if(isset($this->fields[$field][$repetition])){
             return $this->fields[$field][$repetition];
         }else{
-            return FALSE;
+            return new Error("Failed to retrieve value for column '".$field."'");
         }
     }
 
-
-    function setField($field, $value, $repetition= 0)
+    /** Converts value of passed field to a time stamp
+     * Only supports column types of timestamp, date and time
+     * @param $field
+     * @param int $repetition
+     * @return Error|int
+     */
+    function getFieldAsTimestamp($field, $repetition = 0)
     {
+        $fieldValue = $this->getField($field, $repetition);
+        if (FMPDO::isError($fieldValue)) {
+            return $fieldValue;
+        }
+        $hasDate = substr_count($fieldValue, '-') == 2; TRUE; FALSE;
+        $hasTime = substr_count($fieldValue, ':') >= 2; TRUE; FALSE;
 
-            $this->fields[$field][$repetition] = $value;
+        if($hasDate and $hasTime)
+        {
+            // try to convert as a timestamp value
+            $timestamp = @strtotime($fieldValue);
+            if ($timestamp === false) {
+                return new Error('Failed to convert "' . $fieldValue . '" to a UNIX timestamp.');
+            }
+        }
+        elseif($hasDate)
+        {
+            // try to convert as a date value
+            $fieldValueArray = explode('-', $fieldValue);
+            if (count($fieldValueArray) != 3) {
+                return new Error('Failed to parse "' . $fieldValue . '" as a date value.');
+            }
+            $timestamp = @mktime(0, 0, 0, $fieldValueArray[1], $fieldValueArray[2], $fieldValueArray[0]);
+            if ($timestamp === false) {
+                return new Error('Failed to convert "' . $fieldValue . '" to a UNIX timestamp.');
+            }
 
+        }
+        elseif($hasTime)
+        {
+            // try to convert as a time value
+            $fieldValueArray = explode(':', $fieldValue);
+            if (count($fieldValueArray) < 3) {   // allow microtime, though we will ignore it
+                return new Error('Failed to parse "' . $fieldValue . '" as a time value.');
+            }
+            $timestamp = @mktime($fieldValueArray[0], $fieldValueArray[1], $fieldValueArray[2], 1, 1, 1970);
+            if ($timestamp === false) {
+                return new Error('Failed to convert "' . $fieldValue . '" to a UNIX timestamp.');
+            }
+        }
+        else{
+            return new Error('The value supplied for '.$field.' ('.$fieldValue .') cannot be converted to a UNIX timestamp.');
+        }
+
+        return $timestamp;
     }
 
 
+    /**
+     * Set a single field value in the record
+     * @param $field
+     * @param $value
+     * @param int $repetition
+     */
+    function setField($field, $value, $repetition= 0)
+    {
+        $this->fields[$field][$repetition] = $value;
+    }
+
+
+    /**
+     * Fetches the recordid, which is the same as the id column
+     * Returns NULL for new records that have not been committed yet
+     * @return bool|null
+     */
     function getRecordId()
     {
         if(isset($this->recordid)){
             return $this->recordid;
         }else{
-            return FALSE;
+            return NULL;
         }
     }
 
     /**
      * Saves new or existing records to the database
+     * New records are inserted, and the recordid is set back into the object
+     * Records that resulted from a prior query are updated
      */
     function commit()
     {

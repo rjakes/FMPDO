@@ -8,8 +8,6 @@
 
  */
 
-require_once(__DIR__ . '/Error.php');
-
 class Find {
 
     private $table;
@@ -83,7 +81,7 @@ class Find {
         }else{
 
             foreach ($fieldArray as $k => $v) {
-                $selectString .= $k . ',';
+                $selectString .= $v . ',';
             }
             $selectString = substr($selectString, 0, -1);
         }
@@ -93,13 +91,13 @@ class Find {
 
     /**
      * Transforms the passed find criteria into SQL
-     * @param $where_array
+     * @param $whereArray
      * @return string
      */
-    private function sqlWhere($where_array) {
+    private function sqlWhere($whereArray) {
         $whereString = "";
-        if(!empty($where_array)){
-            foreach($where_array as $k=>$v){
+        if(!empty($whereArray)){
+            foreach($whereArray as $k=>$v){
                 $op = isset($v['operator']) ? $v['operator'] : "=";
                 $whereString .= $k. " " .$op ." :". $k .",";
             }
@@ -111,21 +109,26 @@ class Find {
 
     /**
      * Transforms the passed orderby array into SQL
-     * @param $orderby_array
+     * @param $orderByArray
      * @return string
      */
-    private function sqlOrderBy($orderby_array) {
+    private function sqlOrderBy($orderByArray) {
 
         $orderString = "";
-        if(!empty($orderby_array)){
-            foreach($orderby_array as $order_by){
-                $orderString .= " '". $order_by['field']. "' " . $order_by['direction'] .",";
+        if(!empty($orderByArray)){
+            foreach($orderByArray as $orderBy){
+                $orderString .= " '". $orderBy['field']. "' " . $orderBy['direction'] .",";
             }
             $orderString = "ORDER BY".substr($orderString, 0, -1);
         }
         return $orderString;
     }
 
+    /**
+     * Transforms passed limit value into SQL
+     * @param $limit
+     * @return string
+     */
     private function sqlLimit($limit)
     {
         if(intval($limit)){
@@ -134,6 +137,10 @@ class Find {
     }
 
 
+    /**
+     * Assembles the object properties and executes the SQL SELECT statement
+     * @return Error|Result
+     */
     public function execute() {
         $db = FMPDO::getConnection();
         $selectString = self::sqlSelect($this->selectFields);
