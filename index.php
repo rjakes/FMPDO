@@ -38,22 +38,6 @@ catch (Exception $e)
     exit;
 }
 
-use Zend\Db\Sql;
-use Zend\Db\Adapter;
-
-use Zend\Db;
-
-
-$db = new Zend\Db\Adapter\Adapter(
-    array(
-        'driver'        => 'Pdo',
-        'dsn'            => 'mysql:host=127.0.0.1;',
-        'database'      =>  'fmpdo',
-        'username'       => 'root',
-        'password'       => 'root',
-    )
-);
-
 
 echo '<span style="color: blue">Test FMPDO->__contruct():</span><br>';
 var_dump($fmpdo);
@@ -106,9 +90,24 @@ $findCommand->addSortRule("date_created", "0", "ascend");
 var_dump($findCommand);
 echo '<br><br>';
 
+echo '<span style="color: blue">Test Find->setLimit() (limit = 2):</span><br>';
+$findCommand->setLimit("2");
+var_dump($findCommand);
+echo '<br><br>';
+
 echo '<span style="color: blue">Test Find->execute() (for above find object):</span><br>';
 $result = $findCommand->execute();
 var_dump($result);
+echo '<br><br>';
+
+echo '<span style="color: blue">Test FMPDO->newFindAllCommand() (for category table):</span><br>';
+$findCommand = $fmpdo->newFindAllCommand('category');
+var_dump($findCommand);
+echo '<br><br>';
+
+echo '<span style="color: blue">Test Find(All)->execute() (for category table):</span><br>';
+$result = $findCommand->execute();
+var_dump($findCommand);
 echo '<br><br>';
 
 echo '<span style="color: blue">Test Result->getRecords():</span><br>';

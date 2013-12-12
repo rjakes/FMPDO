@@ -13,9 +13,10 @@ require_once(__DIR__ . '/Error.php');
 class Find {
 
     private $table;
-    private $fields = array();
+    private $selectFields = array();
     private $findCriteria = array();
     private $sortRules = array();
+    private $limit;
 
     /**
      * Find command constructor.
@@ -26,33 +27,55 @@ class Find {
         $this->table = $theTable;
     }
 
-    public function selectFields($fieldArray) {
-        if (!isset($fieldArray)) {
-            return new Error("Missing parameter to Find->setFields", "-1");
+    /**
+     * Adds field to be used in the SQL select, to limit the return
+     * @param $fieldArray
+     * @return NULL | Error
+     */
+    public function setSelectFields($fieldArray) {
+        if (!isset($fieldArray) or !is_array($fieldArray)) {
+            return new Error("Missing parameter to Find->setSelectFields", "-1");
         }
-        $this->fields = $fieldArray;
+        $this->selectFields = $fieldArray;
     }
 
-    function addFindCriterion($field, $value) {
+    /**
+     * Adds a find criteria with an optional find operator
+     * @param $field
+     * @param $value
+     */
+    function addFindCriterion($field, $value, $operator='=') {
         $this->findCriteria[$field]['value'] = $value;
+        $this->findCriteria[$field]['operator'] = $operator;
+
     }
 
+    /**
+     * Adds a single sort rule to the array of sort rules
+     * @param $field
+     * @param $precedence
+     * @param string $direction // direction names are FileMaker standard for backwards compatibility
+     */
     function addSortRule($field, $precedence, $direction='ascend') {
         $sqlOrder = strtolower($direction) == "descend" ? "DESC" : "ASC";
         $this->sortRules[$precedence]['field']= $field;
         $this->sortRules[$precedence]['direction']= $sqlOrder;
     }
 
-
+    /**
+     * Stores the optional SQL LIMIT value
+     * @param $limit
+     */
+    function setLimit($limit) {
+        $this->limit = $limit;
+    }
 
 
     /**
-
+     * Transforms the passed select fields into SQL
+     * @param $fieldArray
+     * @return string
      */
-
-
-    //TODO move sql functions out where they can be used by other classes
-
     private function sqlSelect($fieldArray){
         $selectString = "SELECT ";
         if (empty($fieldArray)) {
@@ -68,6 +91,11 @@ class Find {
     }
 
 
+    /**
+     * Transforms the passed find criteria into SQL
+     * @param $where_array
+     * @return string
+     */
     private function sqlWhere($where_array) {
         $whereString = "";
         if(!empty($where_array)){
@@ -80,6 +108,12 @@ class Find {
         return $whereString;
     }
 
+
+    /**
+     * Transforms the passed orderby array into SQL
+     * @param $orderby_array
+     * @return string
+     */
     private function sqlOrderBy($orderby_array) {
 
         $orderString = "";
@@ -92,14 +126,23 @@ class Find {
         return $orderString;
     }
 
+    private function sqlLimit($limit)
+    {
+        if(intval($limit)){
+            return "LIMIT " . intval($limit);
+        }
+    }
+
+
     public function execute() {
         $db = FMPDO::getConnection();
-        $selectString = self::sqlSelect($this->fields);
+        $selectString = self::sqlSelect($this->selectFields);
         $whereString = self::sqlWhere($this->findCriteria);
         asort($this->sortRules); // sort our order by statements by the precedence
         $orderString = self::sqlOrderBy($this->sortRules);
+        $limitString = self::sqlLimit($this->limit);
 
-        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString);
+        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString);
 
         foreach($this->findCriteria as $k=>$v){
             $query->bindParam(':'.$k, $v['value'], PDO::PARAM_STR);
