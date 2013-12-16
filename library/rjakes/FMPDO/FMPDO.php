@@ -23,7 +23,9 @@ class FmPdo {
 	private $locale = 'en';  //TODO move config setting out to their own file
 
 	/**
-	 * FMPDO Constructor
+	 * Initiates the connection to the database.
+	 * 
+	 * Acts as an adapter to the connection object to have the correct interface.
 	 * @param array $sql_config  an array of settings for the db connection
 	 *
 	 */
@@ -44,10 +46,18 @@ class FmPdo {
 			throw $e;
 		}
 	}
+	
+	public function setConnection($pdo) {
+		self::$connection = $pdo;
+	}
 
 
 	/**
-	 * @return string // the FMPDO API version
+	 * 
+	 * Returns the API Version.
+	 * 
+	 * In the form X.Y.Z, X for Major, Y for Minor (compatible APIs), Z for bug corrections.
+	 * @return string the FmPdo API version
 	 */
 	function getAPIVersion(){
 
@@ -69,10 +79,14 @@ class FmPdo {
 	}
 
 	/**
-	 * Returns the current value of $property
+	 * Returns the current value of $property.
+	 * 
+	 * This is for retro-compatibility only and we highly discourage the usage of this method in new code.
+	 * 
+	 * For instance, to get $this->test, call $this->getProperty('test');
 	 *
 	 * @param string name of the property
-	 * @return boolean.
+	 * @return mixed | null if it doesn't exist.
 	 *
 	 */
 	function getProperty($property) {
@@ -97,7 +111,7 @@ class FmPdo {
 	 */
 	public function getRecordByID($table, $id) {
 		$db = FMPDO::getConnection();
-		$query = $db->prepare("SELECT *  FROM " . $table . " WHERE id="."'$id' " ."LIMIT 1" );
+		$query = $db->prepare("SELECT * FROM $table WHERE id='$id' LIMIT 1;" );
 		try {
 			if (!$query) {
 				return new Error($db->errorInfo());
@@ -106,8 +120,8 @@ class FmPdo {
 		} catch (Exception $e) {
 			return new Error($e);
 		}
-		$rows=$query->fetchAll();
-		return new Record($table, $rows[0]);
+		$row=$query->fetch();
+		return new Record($table, $row);
 	}
 
 

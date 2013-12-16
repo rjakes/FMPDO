@@ -3,6 +3,12 @@
 
 use \PDO as PDO;
 
+/**
+ * Extends PDO object to reinforce correct configuration.
+ * 
+ * This class should disappear in nex major version and should not be used directly.
+ *
+ */
 class Connect extends PDO {
 
 	/**
