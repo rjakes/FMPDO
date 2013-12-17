@@ -149,7 +149,15 @@ class Find {
         $orderString = self::sqlOrderBy($this->sortRules);
         $limitString = self::sqlLimit($this->limit);
 
-        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';');
+        try
+        {
+            $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';');
+        }
+        catch (Exception $e)
+        {
+            return new Error($e);
+        }
+
 
         foreach($this->findCriteria as $k=>$v){
             $query->bindParam(':'.$k, $v['value'], PDO::PARAM_STR);
