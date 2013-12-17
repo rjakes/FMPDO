@@ -20,9 +20,9 @@ class Find {
      * Find command constructor.
      * Assign variable and check parameter 
      */
-    public function __construct($theTable) {
+    public function __construct($table) {
 
-        $this->table = $theTable;
+        $this->table = $table;
     }
 
     /**
@@ -99,7 +99,7 @@ class Find {
         if(!empty($whereArray)){
             foreach($whereArray as $k=>$v){
                 $op = isset($v['operator']) ? $v['operator'] : "=";
-                $whereString .= $k. " " .$op ." :". $k .",";
+                $whereString .= $k.$op.":". $k.",";
             }
             $whereString = "WHERE ".substr($whereString, 0, -1);
         }
@@ -149,14 +149,7 @@ class Find {
         $orderString = self::sqlOrderBy($this->sortRules);
         $limitString = self::sqlLimit($this->limit);
 
-        try
-        {
-            $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString);
-        }
-        catch (Exception $e)
-        {
-            return new Error($e);
-        }
+        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';');
 
         foreach($this->findCriteria as $k=>$v){
             $query->bindParam(':'.$k, $v['value'], PDO::PARAM_STR);
