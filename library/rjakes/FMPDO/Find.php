@@ -56,8 +56,7 @@ class Find {
      */
     function addSortRule($field, $precedence, $direction='ascend') {
         $sqlOrder = strtolower($direction) == "descend" ? "DESC" : "ASC";
-        $this->sortRules[$precedence]['field']= $field;
-        $this->sortRules[$precedence]['direction']= $sqlOrder;
+        $this->sortRules[$precedence] = array('field' => $field, 'direction' => $sqlOrder);
     }
 
     /**
@@ -99,9 +98,9 @@ class Find {
         if(!empty($whereArray)){
             foreach($whereArray as $k=>$v){
                 $op = isset($v['operator']) ? $v['operator'] : "=";
-                $whereString .= $k.$op.":". $k.",";
+                $whereString .= $k.$op.":". $k." AND ";
             }
-            $whereString = "WHERE ".substr($whereString, 0, -1);
+            $whereString = "WHERE ".substr($whereString, 0, -5);
         }
         return $whereString;
     }
@@ -113,11 +112,11 @@ class Find {
      * @return string
      */
     private function sqlOrderBy($orderByArray) {
-
         $orderString = "";
+        ksort(&$orderByArray);
         if(!empty($orderByArray)){
             foreach($orderByArray as $orderBy){
-                $orderString .= " '". $orderBy['field']. "' " . $orderBy['direction'] .",";
+                $orderString .= " `". $orderBy['field']. "` " . $orderBy['direction'] .",";
             }
             $orderString = "ORDER BY".substr($orderString, 0, -1);
         }
@@ -144,11 +143,10 @@ class Find {
     
     
     public function assemble() {
-    	$selectString = self::sqlSelect($this->selectFields);
-    	$whereString = self::sqlWhere($this->findCriteria);
-    	asort($this->sortRules); // sort our order by statements by the precedence
-    	$orderString = self::sqlOrderBy($this->sortRules);
-    	$limitString = self::sqlLimit($this->limit);
+    	$selectString = $this->sqlSelect($this->selectFields);
+    	$whereString = $this->sqlWhere($this->findCriteria);
+    	$orderString = $this->sqlOrderBy($this->sortRules);
+    	$limitString = $this->sqlLimit($this->limit);
     	return $selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';';
     }
 

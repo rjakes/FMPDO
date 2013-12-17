@@ -33,10 +33,9 @@ private $fetchCount;
     private function addPDOrows($table, $rows){
 
         if(isset($rows)){
-
-            foreach ($rows as $row){
+            foreach ($rows as $k => $row){
                 $record = new Record($table, $row);
-                $this->records[] = $record;
+                $this->records[$k] = $record;
             }
             $this->fetchCount = count($this->records);
         }

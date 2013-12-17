@@ -68,6 +68,10 @@ class Record
             return new Error("Failed to retrieve value for column '".$field."'");
         }
     }
+    
+    public function getAllFields(){
+    	return $this->fields;
+    }
 
     /** Converts value of passed field to a time stamp
      * Only supports column types of timestamp, date and time
