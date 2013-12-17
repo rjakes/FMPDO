@@ -135,7 +135,24 @@ class Find {
             return "LIMIT " . intval($limit);
         }
     }
+    
+    public function setRelatedSetsFilters(){
+    	 //this function is supposedly like a limit.
+    	 //@see FileMaker_Command_Find
+    	 //we don't support this limit function right now.
+    }
+    
+    
+    public function assemble() {
+    	$selectString = self::sqlSelect($this->selectFields);
+    	$whereString = self::sqlWhere($this->findCriteria);
+    	asort($this->sortRules); // sort our order by statements by the precedence
+    	$orderString = self::sqlOrderBy($this->sortRules);
+    	$limitString = self::sqlLimit($this->limit);
+    	return $selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';';
+    }
 
+    
 
     /**
      * Assembles the object properties and executes the SQL SELECT statement
@@ -143,13 +160,7 @@ class Find {
      */
     public function execute() {
         $db = FMPDO::getConnection();
-        $selectString = self::sqlSelect($this->selectFields);
-        $whereString = self::sqlWhere($this->findCriteria);
-        asort($this->sortRules); // sort our order by statements by the precedence
-        $orderString = self::sqlOrderBy($this->sortRules);
-        $limitString = self::sqlLimit($this->limit);
-
-        $query = $db->prepare($selectString . ' FROM ' . $this->table . " " . $whereString ." ". $orderString  ." ". $limitString.';');
+        $query = $db->prepare($this->assemble());
 
         foreach($this->findCriteria as $k=>$v){
             $query->bindParam(':'.$k, $v['value'], PDO::PARAM_STR);
