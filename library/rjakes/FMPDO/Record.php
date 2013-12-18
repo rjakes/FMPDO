@@ -1,5 +1,5 @@
 <?php
-/* FMPDO Library.
+/* FMPDO Library
  *
  * @package FMPDO
     *

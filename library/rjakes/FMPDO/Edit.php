@@ -1,6 +1,6 @@
 <?php
 /**
- * FMPDO Library.
+ * FMPDO Library
  *
  * @package FMPDO
  *
@@ -43,7 +43,6 @@ class Edit
             $field_name = $field['field'];
             $field_value = $field['value'];
             $this->fields[$field_name][0] = $field_value;
-
         }
 
     }
@@ -59,7 +58,15 @@ class Edit
         $sql = 'UPDATE '.$this->table.' SET ' . $set_string. ' WHERE id=:id';
 
         $db = FMPDO::getConnection();
-        $query = $db->prepare($sql);
+
+        try
+        {
+            $query = $db->prepare($sql);
+        }
+        catch (Exception $e)
+        {
+            return new Error($e);
+        }
 
         $query->bindParam(':id', $this->id, PDO::PARAM_STR);
 
