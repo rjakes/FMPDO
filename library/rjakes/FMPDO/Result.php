@@ -13,6 +13,8 @@ class Result
 private $records = array();
 private $fetchCount;
 
+public $dateType = array();
+
 
 
     function __construct($table, $rows= FALSE){
@@ -35,6 +37,7 @@ private $fetchCount;
         if(isset($rows)){
             foreach ($rows as $k => $row){
                 $record = new Record($table, $row);
+              	$record->resultSet = $this;
                 $this->records[$k] = $record;
             }
             $this->fetchCount = count($this->records);

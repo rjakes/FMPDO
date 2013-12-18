@@ -17,6 +17,8 @@ class Record
     private $recordid;
     private $fields = array();
     private $relatedSets = array();
+    
+    public $resultSet = null;
 
     /**
      * A recordid of null indicates a new record that will be inserted upon commit
@@ -60,9 +62,11 @@ class Record
      * @param int $repetition
      * @return value|Error
      */
-    function getField($field, $repetition= 0)
+    function getField($field, $repetition = 0)
     {
-        if(array_key_exists($field,$this->fields) && array_key_exists($repetition, $this->fields[$field])){
+    	return $this->fields[$field][$repetition];
+        if(isset($this->fields[$field][$repetition]) ||
+        		(array_key_exists($field,$this->fields) && array_key_exists($repetition, $this->fields[$field])) ){
             return $this->fields[$field][$repetition];
         }else{
             return new Error("Failed to retrieve value for column '".$field."'");
@@ -79,16 +83,17 @@ class Record
      * @param int $repetition
      * @return Error|int
      */
-    function getFieldAsTimestamp($field, $repetition = 0)
+    function getFieldAsTimestamp($field, $repetition = 0,$force = false)
     {
         $fieldValue = $this->getField($field, $repetition);
+        if ($force) return strtotime($fieldValue);
         if (FMPDO::isError($fieldValue)) {
             return $fieldValue;
         }
         $hasDate = substr_count($fieldValue, '-') == 2; TRUE; FALSE;
         $hasTime = substr_count($fieldValue, ':') >= 2; TRUE; FALSE;
 
-        if($hasDate and $hasTime)
+        if($hasDate && $hasTime)
         {
             // try to convert as a timestamp value
             $timestamp = @strtotime($fieldValue);
