@@ -68,14 +68,14 @@ class FmPdo {
 	/**
 	 * Test for whether or not a variable is an Error object.
 	 *
-	 * @param mixed $variable
+	 * @param mixed $results
 	 * @return boolean.
 	 * @static
 	 *
 	 */
-	function isError($variable)
+	static function isError($results)
 	{
-		return is_a($variable, 'Error');
+		return is_a($results, 'Error');
 	}
 
 	/**

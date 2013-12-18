@@ -62,7 +62,7 @@ class Record
      */
     function getField($field, $repetition= 0)
     {
-        if(isset($this->fields[$field][$repetition])){
+        if(array_key_exists($field,$this->fields) && array_key_exists($repetition, $this->fields[$field])){
             return $this->fields[$field][$repetition];
         }else{
             return new Error("Failed to retrieve value for column '".$field."'");
