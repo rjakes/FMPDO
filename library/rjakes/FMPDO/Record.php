@@ -82,6 +82,7 @@ class Record
      * @param $field
      * @param int $repetition
      * @return Error|int
+     * todo all of the $hasDate and $hasTime stuff can be removed, the function can just call strtotime
      */
     function getFieldAsTimestamp($field, $repetition = 0,$force = false)
     {
