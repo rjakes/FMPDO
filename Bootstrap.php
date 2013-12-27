@@ -16,4 +16,4 @@ function Autoload($class_name) {
     require_once (str_replace("\\", DIRECTORY_SEPARATOR, $class_name) . '.php');
 }
 
-require_once(__DIR__ . '/library/rjakes/FMPDO/FmPdo.php');
+require_once(__DIR__ . '/library/rjakes/FMPDO/FmPdo_.php');
