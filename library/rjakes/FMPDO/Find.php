@@ -170,7 +170,15 @@ class Find {
 		} catch (Exception $e) {
 			return new Error($e);
 		}
-		return new Result($this->table, $query->fetchAll());
+
+        $rows = $query->fetchAll();
+
+        if(count($rows) > 0){
+            return new Result($this->table, $rows);
+        }else{
+             return new Error("No records found", "401");
+        }
+
 	}
 
 }
