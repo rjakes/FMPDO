@@ -1,0 +1,24 @@
+{
+    "name": "rjakes/fmpdo",
+    "type": "library",
+    "description": "Replacement for FileMaker.php when converting to SQL",
+    "keywords": [
+        "FileMaker",
+        "adapter"
+    ],
+    "homepage": "http://github.com/rjakes/FMPDO",
+    "license": "MIT",
+    "authors": [
+        {"name": "Roger Jacques", "email": "roger@rjakes.com"}
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "pear/pear": "dev-master"
+
+    },
+    "autoload": {
+        "psr-0": {
+            "rjakes\\": "library/"
+        }
+    }
+}
