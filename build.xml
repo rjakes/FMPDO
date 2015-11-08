@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Soliant" default="phpunit" basedir=".">
+    <!-- Testing -->
+    <target name="phpunit" description="Run PHPUnit tests">
+        <exec executable="vendor/bin/phpunit">
+            <arg value="-c"/>
+            <arg value="./phpunit.xml"/>
+        </exec>
+        <echo message="PHPCS"/>
+        <exec executable="vendor/bin/phpcs">
+            <arg value="-np"/>
+            <arg value="--standard=PSR2"/>
+            <arg value="library/"/>
+            <arg value="tests/"/>
+        </exec>
+    </target>
+</project>
