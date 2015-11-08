@@ -3,6 +3,9 @@ namespace RjakesTest\FmPdo;
 
 use PDO;
 
-class MockPdo extends PDO {
-    public function __construct() {}
+class MockPdo extends PDO
+{
+    public function __construct()
+    {
+    }
 }

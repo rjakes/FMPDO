@@ -37,7 +37,7 @@ Before you start make sure the tests run using ant:
 Alternatively, if you don't want to install Java to run ant, the tests run like this:
 
     php ./vendor/bin/phpunit -c phpunit.xml
-    php ./vendor/bin/phpcs -np --standard=PSR2 library/ tests/
+    php ./vendor/bin/phpcs -p --standard=PSR2 library/ tests/
 
 ## Branch, Change and Test
 

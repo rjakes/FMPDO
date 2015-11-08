@@ -8,7 +8,7 @@
         </exec>
         <echo message="PHPCS"/>
         <exec executable="vendor/bin/phpcs">
-            <arg value="-np"/>
+            <arg value="-p"/>
             <arg value="--standard=PSR2"/>
             <arg value="library/"/>
             <arg value="tests/"/>
