@@ -1,47 +1,62 @@
 <?php
-/* FMPDO Library
+/**
+ * @package Rjakes\FmPdo
  *
- * @package FMPDO
-    *
- * Copyright � 2013, Roger Jacques Consulting
+ * Copyright 2013-2015, Roger Jacques Consulting
  * See enclosed MIT license
-
  */
+namespace Rjakes\FmPdo;
 
-
-@require_once 'PEAR.php';
-if (!class_exists('PEAR_Error')) {
-    require_once 'library/pear/PEAR.php';
-}
-
-
-class Error extends PEAR_Error
+class Error
 {
+    /**
+     * @var string
+     */
+    protected $message = null;
 
-    function __construct($message = null, $code = null)
+    /**
+     * @var int
+     */
+    protected $code = null;
+
+    public function __construct($message = null, $code = null, FmPdo $fmPdo = null)
     {
-        //$this->_fmpdo =& $fmpdo;
-        parent::PEAR_Error($message, $code);
-
-//TODO create logging functions
+        $this->fmPdo = $fmPdo;
+        $this->message = $message;
+        $this->code = $code;
+        // @TODO create logging functions
     }
 
-
-    function getMessage()
+    /**
+     * @return null|string
+     */
+    public function getMessage()
     {
-        if ($this->message === null && $this->getCode() !== null) {
-            return $this->getErrorString();
+        if ($this->message === null && $this->code !== null) {
+            return $this->errorCodeToString();
         }
-        return parent::getMessage();
+        return $this->message;
     }
 
-
-    function getErrorString()
+    /**
+     * @return null|int
+     */
+    public function getCode()
     {
+        return $this->code;
+    }
+
+    /**
+     * @todo implement
+     */
+    private function errorCodeToString()
+    {
+        return 'Error code ' . $this->code;
+        /**
         // Default to English.
-        $lang = basename($this->_fmpdo->getProperty('locale'));
-        if (!$lang) {
-            $lang = 'en';
+        $lang = 'en';
+        if ($this->fmPdo) {
+            $lang = basename($this->fmPdo->getProperty('locale'));
         }
 
         static $strings = array();
@@ -57,12 +72,13 @@ class Error extends PEAR_Error
         }
 
         return $strings[$lang][-1];
+        */
     }
 
     /**
-
+     * @todo implement
      */
-    function isValidationError()
+    public function isValidationError()
     {
         return false;
     }
