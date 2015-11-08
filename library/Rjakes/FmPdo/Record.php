@@ -1,23 +1,27 @@
 <?php
-/* FMPDO Library
+/**
+ * @package Rjakes\FmPdo
  *
- * @package FMPDO
-    *
- * Copyright � 2013, Roger Jacques Consulting
+ * Copyright 2013-2015, Roger Jacques Consulting
  * See enclosed MIT license
-
  */
+namespace Rjakes\FmPdo;
 
 /**
  * Record class, a container for a new record or a database row that has been retrieved
  */
 class Record
 {
+    /**
+     * @var FmPdo
+     */
+    private $fmPdo;
     private $table;
     private $recordid;
     private $fields = array();
     private $relatedSets = array();
     
+    // @todo can refactor to be protected with getter instead?
     public $resultSet = null;
 
     /**
@@ -26,9 +30,10 @@ class Record
      * @param $theTable
      * @param array $pdoRow
      */
-    function __construct($theTable, $pdoRow= array())
+    public function __construct($theTable, $pdoRow = array(), FmPdo $fmPdo = null)
     {
 
+        $this->fmPdo = $fmPdo;
         $this->table = $theTable;
         if(!empty($pdoRow) and !isset($pdoRow['id'])){
             return new Error("id column is required for Record Object");
@@ -43,11 +48,12 @@ class Record
 
     }
 
-    /** Sets all field values from passed row
+    /**
+     * Sets all field values from passed row
      * row must be an associative array fetch from PDO
      * @param $pdo_row
      */
-    function setFieldsFromPDOrow($pdo_row)
+    protected function setFieldsFromPDOrow($pdo_row)
     {
         if(isset($pdo_row) and is_array($pdo_row))
         {
@@ -60,17 +66,20 @@ class Record
     /** Fetches the specified field value from the object
      * @param $field
      * @param int $repetition
-     * @return value|Error
+     * @return string|Error
      */
-    function getField($field, $repetition = 0)
+    public function getField($field, $repetition = 0)
     {
     	return $this->fields[$field][$repetition];
+        /**
+         * @todo delete or implement
         if(isset($this->fields[$field][$repetition]) ||
         		(array_key_exists($field,$this->fields) && array_key_exists($repetition, $this->fields[$field])) ){
             return $this->fields[$field][$repetition];
         }else{
             return new Error("Failed to retrieve value for column '".$field."'");
         }
+         */
     }
     
     public function getAllFields(){
@@ -82,13 +91,13 @@ class Record
      * @param $field
      * @param int $repetition
      * @return Error|int
-     * todo all of the $hasDate and $hasTime stuff can be removed, the function can just call strtotime
+     * @todo all of the $hasDate and $hasTime stuff can be removed, the function can just call strtotime
      */
-    function getFieldAsTimestamp($field, $repetition = 0,$force = false)
+    public function getFieldAsTimestamp($field, $repetition = 0,$force = false)
     {
         $fieldValue = $this->getField($field, $repetition);
         if ($force) return strtotime($fieldValue);
-        if (FMPDO::isError($fieldValue)) {
+        if (FmPdo::isError($fieldValue)) {
             return $fieldValue;
         }
         $hasDate = substr_count($fieldValue, '-') == 2; TRUE; FALSE;
@@ -141,7 +150,7 @@ class Record
      * @param $value
      * @param int $repetition
      */
-    function setField($field, $value, $repetition= 0)
+    public function setField($field, $value, $repetition= 0)
     {
         $this->fields[$field][$repetition] = $value;
     }
@@ -152,7 +161,7 @@ class Record
      * Returns NULL for new records that have not been committed yet
      * @return bool|null
      */
-    function getRecordId()
+    public function getRecordId()
     {
         if(isset($this->recordid)){
             return $this->recordid;
@@ -166,9 +175,9 @@ class Record
      * New records are inserted, and the recordid is set back into the object
      * Records that resulted from a prior query are updated
      */
-    function commit()
+    public function commit()
     {
-        $db = FMPDO::getConnection();
+        $db = $this->fmPdo->getConnection();
 
         $columnNv = array();
         foreach($this->fields as $k => $v)

@@ -1,24 +1,29 @@
 <?php
-/* FMPDO Library
+/**
+ * @package Rjakes\FmPdo
  *
- * @package FMPDO
-    *
- * Copyright � 2013, Roger Jacques Consulting
+ * Copyright 2013-2015, Roger Jacques Consulting
  * See enclosed MIT license
-
  */
+namespace Rjakes\FmPdo;
+
 class Result
 {
 
 private $records = array();
 private $fetchCount;
 
+// @todo can refactor to be protected with getter instead?
 public $dateType = array();
-
-
-
-    function __construct($table, $rows= FALSE){
-
+    
+    /**
+     * Result constructor.
+     * @param string $table
+     * @param bool $rows
+     */
+    public function __construct($table, $rows = false, FmPdo $fmPdo = null)
+    {
+        $this->fmPdo = $fmPdo;
         if($rows and empty($rows)){
          return new Error('No data was found.', '401');
         }
@@ -44,11 +49,11 @@ public $dateType = array();
         }
     }
 
-    function getRecords(){
+    public function getRecords(){
         return $this->records;
     }
 
-    function getFirstRecord(){
+    public function getFirstRecord(){
         return $this->records[0];
     }
 

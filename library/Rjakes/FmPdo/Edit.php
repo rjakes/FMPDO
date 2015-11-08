@@ -1,36 +1,56 @@
 <?php
 /**
- * FMPDO Library
+ * @package Rjakes\FmPdo
  *
- * @package FMPDO
- *
- * Copyright � 2013, Roger Jacques Consulting
+ * Copyright 2013-2015, Roger Jacques Consulting
  * See enclosed MIT license
  */
+namespace Rjakes\FmPdo;
 
+use Exception;
+use PDO;
 
 class Edit
 {
-
+    /**
+     * @var FmPdo
+     */
+    private $fmPdo;
     private $table;
     private $id;
     private $fields = array();
 
-
-    public function __construct($theTable, $id){
-
+    /**
+     * Edit constructor.
+     * @param $theTable
+     * @param $id
+     * @param FmPdo|null $fmPdo
+     */
+    public function __construct($theTable, $id, FmPdo $fmPdo = null){
+        $this->fmPdo = $fmPdo;
         $this->table = $theTable;
         $this->id = $id;
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @return null|Error
+     */
     public function setField($field, $value){
         if(!isset($field) or !isset($value)){
             return new Error("Missing parameter to Edit->setField", "-1");
         }
 
         $this->fields[$field][0] = $value;
+
+        return null;
     }
 
+    /**
+     * @param $field_array
+     * @return null|Error
+     */
     public function setFields($field_array){
         if(!isset($field_array) or !isset($value)){
             return new Error("Missing parameter to Edit->setFields", "-1");
@@ -45,8 +65,12 @@ class Edit
             $this->fields[$field_name][0] = $field_value;
         }
 
+        return null;
     }
 
+    /**
+     * @return bool|Error
+     */
     public function execute(){
 
         $set_string = "";
@@ -57,7 +81,7 @@ class Edit
 
         $sql = 'UPDATE '.$this->table.' SET ' . $set_string. ' WHERE id=:id';
 
-        $db = FMPDO::getConnection();
+        $db = $this->fmPdo->getConnection();
 
         try
         {

@@ -1,35 +1,31 @@
 <?php
-
-/* FMPDO Library
+/**
+ * @package Rjakes\FmPdo
  *
-* @package FMPDO
-*
-* Copyright � 2013, Roger Jacques Consulting
-* See enclosed MIT license
+ * Copyright 2013-2015, Roger Jacques Consulting
+ * See enclosed MIT license
+ */
+namespace Rjakes\FmPdo;
 
-*/
-
+use Exception;
 
 /**
- * Base FMPDO Class
+ * Base FmPdo Class
  *
- * @package FMPDO
+ * @package FmPdo
  * handles db connection and spawning of command objects
  */
 class FmPdo {
 
-	public static $connection;
+	protected $connection;
 	private $error = '';
 	private $locale = 'en';  //TODO move config setting out to their own file
 
 	/**
-	 * Initiates the connection to the database.
-	 * 
-	 * Acts as an adapter to the connection object to have the correct interface.
-	 * @param array $sql_config  an array of settings for the db connection
-	 *
+	 * FmPdo constructor.
+	 * @param array $dbConfig // an array of settings for the db connection
 	 */
-	function __construct($dbConfig = array()) {
+	public function __construct($dbConfig = array()) {
 
 		try
 		{
@@ -39,7 +35,7 @@ class FmPdo {
 			else {
 				$dsn = $dbConfig['driver'].':'.$dbConfig['host'].':port='.$dbConfig['port'].';dbname='.$dbConfig['database'];
 			}
-			self::$connection = new Connect($dsn,$dbConfig['username'],$dbConfig['password']);
+			$this->connection = new Connect($dsn, $dbConfig['username'], $dbConfig['password']);
 		}
 		catch (Exception $e)
 		{
@@ -48,7 +44,7 @@ class FmPdo {
 	}
 	
 	public function setConnection($pdo) {
-		self::$connection = $pdo;
+		$this->connection = $pdo;
 	}
 
 
@@ -59,7 +55,7 @@ class FmPdo {
 	 * In the form X.Y.Z, X for Major, Y for Minor (compatible APIs), Z for bug corrections.
 	 * @return string the FmPdo API version
 	 */
-	function getAPIVersion(){
+	public static function getAPIVersion(){
 
 		return "0.1.0";
 	}
@@ -73,44 +69,42 @@ class FmPdo {
 	 * @static
 	 *
 	 */
-	static function isError($results)
+	public static function isError($results)
 	{
-		return is_a($results, 'Error');
+		return ($results instanceof Error);
 	}
 
 	/**
 	 * Returns the current value of $property.
-	 * 
+	 *
 	 * This is for retro-compatibility only and we highly discourage the usage of this method in new code.
-	 * 
+	 *
 	 * For instance, to get $this->test, call $this->getProperty('test');
 	 *
-	 * @param string name of the property
-	 * @return mixed | null if it doesn't exist.
+	 * @param string $property // name of the property
+	 * @return mixed|null
 	 *
 	 */
-	function getProperty($property) {
+	public function getProperty($property) {
 		return isset($this->$property) ? $this->$property : null;
 	}
 
 	/**
-	 * @param $property
-	 * @return the static connection for this instance of FMPDO
+	 * @return Connect
 	 */
-	public static function getConnection() {
-		return self::$connection;
+	public function getConnection() {
+		return $this->connection;
 	}
 
 
 	/**
-	 * Fetches a record from the database by its id column
-	 *
-	 * @param $table the name of the sql table
-	 * @param $id  the value of the id/primary key
+	 * Fetch a record from the database by its primary key column
+	 * @param string $table // the name of the sql table
+	 * @param string $id // the value of the id/primary key
 	 * @return Error|Record
 	 */
 	public function getRecordByID($table, $id) {
-		$db = FMPDO::getConnection();
+		$db = $this->getConnection();
 		$query = $db->prepare("SELECT * FROM $table WHERE id='$id' LIMIT 1;" );
 		try {
 			if (!$query) {
@@ -126,41 +120,44 @@ class FmPdo {
 
 
 	/**
-	 * Instantiates a new Find object
-	 *
-	 * @param $table the sql table that the query will be performed on
+	 * @param string $table // the sql table that the query will be performed on
 	 * @return Find
 	 */
-	function newFindCommand($table) {
+	public function newFindCommand($table)
+	{
 		$findCommand = new Find($table);
 		return $findCommand;
 	}
 
 	/**
-	 * Instantiates a new Find object
-	 * this method is for backwards compatibility
-	 * @param $table the sql table that the query will be performed on
+	 * This method is for backwards compatibility
+	 * @param string $table // the sql table that the query will be performed on
 	 * @return Find
 	 */
-	function newFindAllCommand($table) {
+	public function newFindAllCommand($table)
+	{
 		$findCommand = new Find($table);
 		return $findCommand;
 	}
 
 
 	/**
-	 * Instantiates a new Edit object
-	 *
-	 * @param $table  the sql table that the edit will be performed in
-	 * @param $id  // the primary key of the record that will be edited
-	 * @return Fmpdo Edit  Object
+	 * @param string $table // the sql table that the edit will be performed in
+	 * @param string $id // the primary key of the record that will be edited
+	 * @return Edit
 	 */
-	function newEditCommand($table, $id) {
+	public function newEditCommand($table, $id)
+	{
 		$editCmd = new Edit($table, $id);
 		return $editCmd;
 	}
-
-	function createRecord($table) {
+	
+	/**
+	 * @param $table
+	 * @return Record
+	 */
+	public function createRecord($table)
+	{
 		$record = new Record($table);
 		return $record;
 	}

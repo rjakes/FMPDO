@@ -1,7 +1,14 @@
 <?php
+/**
+ * @package Rjakes\FmPdo
+ *
+ * Copyright 2013-2015, Roger Jacques Consulting
+ * See enclosed MIT license
+ */
+namespace Rjakes\FmPdo;
 
-
-use \PDO as PDO;
+use PDO;
+use PDOException;
 
 /**
  * Extends PDO object to reinforce correct configuration.
@@ -19,7 +26,7 @@ class Connect extends PDO {
 	 * @param string $dsn see PDO documentation for format
 	 * @throws PDOException
 	 */
-	function __construct($dsn,$username,$password,$options=array()) {
+	public function __construct($dsn,$username,$password,$options=array()) {
 		try {
 			parent::__construct($dsn, $username, $password, $options);
 			$this->setAttribute(parent::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES UTF8');

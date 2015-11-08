@@ -1,15 +1,19 @@
 <?php
-/* FMPDO Library
+/**
+ * @package Rjakes\FmPdo
  *
-* @package FMPDO
-*
-* Copyright � 2013, Roger Jacques Consulting
-* See enclosed MIT license
+ * Copyright 2013-2015, Roger Jacques Consulting
+ * See enclosed MIT license
+ */
+namespace Rjakes\FmPdo;
 
-*/
+use PDO;
 
 class Find {
-
+	/**
+	 * @var FmPdo
+	 */
+	private $fmPdo;
 	private $table;
 	private $selectFields = array();
 	private $findCriteria = array();
@@ -20,8 +24,8 @@ class Find {
 	 * Find command constructor.
 	 * Assign variable and check parameter
 	 */
-	public function __construct($table) {
-
+	public function __construct($table, FmPdo $fmPdo = null){
+		$this->fmPdo = $fmPdo;
 		$this->table = $table;
 	}
 
@@ -42,7 +46,7 @@ class Find {
 	 * @param $field
 	 * @param $value
 	 */
-	function addFindCriterion($field, $value, $operator='=') {
+	public function addFindCriterion($field, $value, $operator='=') {
 		$this->findCriteria[$field]['value'] = $value;
 		$this->findCriteria[$field]['operator'] = $operator;
 
@@ -54,7 +58,7 @@ class Find {
 	 * @param $precedence
 	 * @param string $direction // direction names are FileMaker standard for backwards compatibility
 	 */
-	function addSortRule($field, $precedence, $direction='ascend') {
+	public function addSortRule($field, $precedence, $direction='ascend') {
 		$sqlOrder = strtolower($direction) == "descend" ? "DESC" : "ASC";
 		$this->sortRules[$precedence] = array('field' => $field, 'direction' => $sqlOrder);
 	}
@@ -63,7 +67,7 @@ class Find {
 	 * Stores the optional SQL LIMIT value
 	 * @param $limit
 	 */
-	function setLimit($limit) {
+	public function setLimit($limit) {
 		$this->limit = $limit;
 	}
 
@@ -157,7 +161,7 @@ class Find {
 	 * @return Error|Result
 	 */
 	public function execute() {
-		$db = FMPDO::getConnection();
+		$db = $this->fmPdo->getConnection();
 		try {
 			$query = $db->prepare($this->assemble());
 			if (!$query) {
