@@ -113,7 +113,7 @@ class Find {
 	 */
 	private function sqlOrderBy($orderByArray) {
 		$orderString = "";
-		ksort(&$orderByArray);
+        ksort($orderByArray);
 		if(!empty($orderByArray)){
 			foreach($orderByArray as $orderBy){
 				$orderString .= " `". $orderBy['field']. "` " . $orderBy['direction'] .",";
