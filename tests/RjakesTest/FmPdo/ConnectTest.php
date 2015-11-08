@@ -1,7 +1,9 @@
 <?php
+namespace RjakesTest\FmPdo;
 
-require_once 'Bootstrap.php';
-use \PDO;
+use PDO;
+use PHPUnit_Framework_TestCase;
+use Rjakes\FmPdo\Connect;
 
 class ConnectTest extends PHPUnit_Framework_TestCase
 {

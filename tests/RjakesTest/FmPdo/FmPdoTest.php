@@ -1,13 +1,17 @@
 <?php
+namespace RjakesTest\FmPdo;
 
-require_once 'Bootstrap.php';
-use \PDO;
-
-
-require_once 'PdoStub.php';
+use PHPUnit_Framework_TestCase;
+use Rjakes\FmPdo\Error;
+use Rjakes\FmPdo\FmPdo;
+use stdClass;
 
 class FmPdoTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var FmPdo
+	 */
+	private $fmPdo;
 	
 	public function setUp(){
 
@@ -39,13 +43,13 @@ class FmPdoTest extends PHPUnit_Framework_TestCase
 	}
 	
 	public function testGetConnection(){
-		$this->assertTrue(is_a($this->fmPdo->getConnection(),'Pdo'));
-		$this->assertTrue(is_a($this->fmPdo->getConnection(),'Connect'));
+		$this->assertInstanceOf('\PDO', $this->fmPdo->getConnection());
+		$this->assertInstanceOf('\Rjakes\FmPdo\Connect', $this->fmPdo->getConnection());
 	}
 	
 	
 	public function testErrorGetRecordByIDError(){
-		$pdoStub = $this->getMockBuilder('MockPdo')
+		$pdoStub = $this->getMockBuilder('\RjakesTest\FmPdo\MockPdo')
                      ->getMock();
 		
 		$pdoStub->expects($this->any())
@@ -53,7 +57,7 @@ class FmPdoTest extends PHPUnit_Framework_TestCase
 		->will($this->returnValue(null));
 		
 		$this->fmPdo->setConnection($pdoStub);
-		$this->assertTrue(is_a($this->fmPdo->getRecordByID('error', 1),'Error'));
+		$this->assertInstanceOf('\Rjakes\FmPdo\Error', $this->fmPdo->getRecordByID('error', 1));
 	}
 	
 	public function testGetRecordByID(){
@@ -69,7 +73,7 @@ class FmPdoTest extends PHPUnit_Framework_TestCase
 		->will($this->returnValue(array('id' => 1,'username' => 'baptiste')));
 		
 		//PDO stubbing
-		$pdoStub = $this->getMock('MockPdo',array('prepare'));
+		$pdoStub = $this->getMock('\RjakesTest\FmPdo\MockPdo', array('prepare'));
 		
 		$pdoStub->expects($this->once())
 		->method('prepare')
@@ -78,7 +82,7 @@ class FmPdoTest extends PHPUnit_Framework_TestCase
 	
 		$this->fmPdo->setConnection($pdoStub);
 		
-		$this->assertTrue(is_a($this->fmPdo->getRecordByID('users', 1),'Record'));
+		$this->assertInstanceOf('\Rjakes\FmPdo\Record', $this->fmPdo->getRecordByID('users', 1));
 	}
 	
 }

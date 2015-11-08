@@ -1,13 +1,19 @@
 <?php
+namespace RjakesTest\FmPdo;
 
-require_once 'Bootstrap.php';
-use \PDO;
-
-
-require_once 'PdoStub.php';
+use PHPUnit_Framework_TestCase;
+use Rjakes\FmPdo\Find;
+use Rjakes\FmPdo\FmPdo;
+use Rjakes\FmPdo\Record;
+use Rjakes\FmPdo\Result;
 
 class FindTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var FmPdo
+	 */
+	private $fmPdo;
+	
 	public function setUp(){
 	
 		$dbConfig = array(
@@ -21,7 +27,7 @@ class FindTest extends PHPUnit_Framework_TestCase
 	public function testFindConstruct(){
 		
 		//Query Stubbing
-		$queryStub = $this->getMock('MockPdoStatement',array('execute','fetchAll'));
+		$queryStub = $this->getMock('\RjakesTest\FmPdo\MockPdoStatement', array('execute', 'fetchAll'));
 		
 		$queryStub
 		->expects($this->once())
@@ -34,7 +40,7 @@ class FindTest extends PHPUnit_Framework_TestCase
 		->will($this->returnValue(array(array('id' => 1,'username' => 'baptiste'))));
 		
 		//PDO stubbing
-		$pdoStub = $this->getMock('MockPdo',array('prepare'));
+		$pdoStub = $this->getMock('\RjakesTest\FmPdo\MockPdo', array('prepare'));
 		
 		$pdoStub->expects($this->once())
 		->method('prepare')
@@ -43,14 +49,15 @@ class FindTest extends PHPUnit_Framework_TestCase
 		
 		$this->fmPdo->setConnection($pdoStub);
 		
-		$findC = new Find('users');
+		$findC = new Find('users', $this->fmPdo);
 		$findC->addFindCriterion('username','baptiste');
 		
 		$resultSet = $findC->execute();
-		$this->assertTrue(is_a($resultSet,'Result'));
+		$this->assertInstanceOf('\Rjakes\FmPdo\Result', $resultSet);
 		
+		/** @var Record $record */
 		$record = $resultSet->getFirstRecord();
-		$this->assertTrue(is_a($record,'Record'));
+		$this->assertInstanceOf('\Rjakes\FmPdo\Record', $record);
 		
 		$this->assertEquals('baptiste',$record->getField('username'));
 		$this->assertEquals('1',$record->getField('id'));

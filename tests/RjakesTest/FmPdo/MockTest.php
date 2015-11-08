@@ -1,4 +1,8 @@
 <?php
+namespace RjakesTest\FmPdo;
+
+use PHPUnit_Framework_TestCase;
+
 class StackTest extends PHPUnit_Framework_TestCase
 {
     public function testPushAndPop()
