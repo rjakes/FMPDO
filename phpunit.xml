@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuite name="FmPdo">
+        <directory>./tests/RjakesTest</directory>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./library/Rjakes/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

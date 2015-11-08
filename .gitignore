@@ -1,2 +1,3 @@
-config.php
-notes.txt
+composer.phar
+composer.lock
+vendor
