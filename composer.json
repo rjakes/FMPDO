@@ -1,24 +1,43 @@
 {
-    "name": "rjakes/fmpdo",
-    "type": "library",
-    "description": "Replacement for FileMaker.php when converting to SQL",
-    "keywords": [
-        "FileMaker",
-        "adapter"
-    ],
-    "homepage": "http://github.com/rjakes/FMPDO",
-    "license": "MIT",
-    "authors": [
-        {"name": "Roger Jacques", "email": "roger@rjakes.com"}
-    ],
-    "require": {
-        "php": ">=5.3.0",
-        "pear/pear": "dev-master"
-
+  "name": "rjakes/fmpdo",
+  "type": "library",
+  "description": "Replacement for FileMaker.php when converting to SQL",
+  "keywords": [
+    "FileMaker",
+    "PDO",
+    "adapter"
+  ],
+  "homepage": "http://github.com/rjakes/FMPDO",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roger Jacques",
+      "email": "roger@rjakes.com"
     },
-    "autoload": {
-        "psr-0": {
-            "rjakes\\": "library/"
-        }
+    {
+      "name": "Baptiste Manson",
+      "email": "baptiste.manson@gmail.com"
+    },
+    {
+      "name": "Jeremiah Small",
+      "email": "me@jsmall.us"
     }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rjakes\\": "library/Rjakes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RjakesTest\\": "tests/RjakesTest/"
+    }
+  },
+  "require-dev": {
+    "phpunit/PHPUnit": "4.*",
+    "squizlabs/php_codesniffer": "2.*"
+  }
 }
