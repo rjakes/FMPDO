@@ -34,15 +34,6 @@ The legacy solution can be refactored to a SQL backend all at once, or increment
 FmPdo is free for commercial and non-commercial use, licensed under the business-friendly standard MIT license.
 
 
-# FmPdo Documentation
-
-* index.php contains sample calls to supported methods, more formal docs are on the way
-
-## Example Quickstart
-* Put the code in a place where your browser can load it (existing web root or create a host)
-* Import sample_data/fmpdo.sql into your favorite SQL database
-* Edit config.php with your connection settings
-* Load index.php with your browser
 
 ## Conversion Quickstart
 * Create SQL tables that mirror existing FMP tables
