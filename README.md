@@ -41,7 +41,7 @@ FmPdo is free for commercial and non-commercial use, licensed under the business
 FileMaker fields
 * Add or change the database adapter
 
-```
+```php
 // this is a typical FileMaker.php instantiation
 $databaseName = 'myDB';
 $server = '127.0.0.1';
@@ -51,7 +51,7 @@ $passWord = 'pword';
 $fm = new FileMaker($databaseName,$server,$userName,$passWord);
 ```
 
-```
+```php
 // this is a typical FmPdo instantiation
 $dbConfig = array(
     'driver' => 'mysql',
@@ -70,7 +70,7 @@ $fm = new FmPdo($db_config);
 
 Locate commands that you wish to convert to SQL:
 
-```
+```php
 $find = $fm->newFindCommand($fmpLayout); // new find command for FileMaker
 $find = $fmPdo->newFindCommand($sqlTable) // a new FmpdoCommandFind object
 
